@@ -216,17 +216,69 @@
       .main-content::-webkit-scrollbar-thumb:active {
         background: #99ff99; /* Even lighter green when active */
       }
+
+      /* Add styles for the scenario select dropdown */
+      #scenario-select {
+        width: 100%;
+        padding: 5px;
+        background-color: #111;
+        color: #33ff33;
+        border: 1px solid #33ff33;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      #scenario-select:hover {
+        border-color: #66ff66;
+      }
+
+      /* Add styles for the Open Player Page button */
+      button#open-player-page {
+        width: 100%;
+        padding: 10px;
+        background-color: #111;
+        color: #33ff33;
+        border: 2px solid #33ff33;
+        font-family: "Courier New", monospace;
+        font-size: 16px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px #33ff33;
+        transition: all 0.3s ease-in-out;
+      }
+
+      button#open-player-page:hover {
+        background-color: #33ff33;
+        color: #000;
+        border-color: #66ff66;
+        box-shadow: 0 0 15px #66ff66;
+      }
+
+      .scene-description {
+        border: 1px solid #33ff33;
+        background-color: rgba(51, 255, 51, 0.1);
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <div class="main-content">
-      <h1>Mothership Game Master Screen</h1>
+      <h1>Mothership Warden Assistant</h1>
       <label for="scenario-select">Select Scenario:</label>
       <select id="scenario-select" onchange="loadScenario()">
         <option value="ypsilon">The Haunting of Ypsilon 14</option>
       </select>
-      <!-- Add this button somewhere in index.html -->
-      <button onclick="openPlayerPage()">Open Player Page</button>
+
+      <!-- Updated button with ID for styling -->
+      <button id="open-player-page" onclick="openPlayerPage()">
+        Open Player Page
+      </button>
 
       <div id="scenario-content">
         <!-- Scenario content will be dynamically added here -->
@@ -621,7 +673,46 @@
 
           area.scenes.forEach((scene) => {
             const sceneDiv = document.createElement("div");
-            sceneDiv.innerHTML = `<h2>${scene.name}</h2><p>${scene.description}</p>`;
+
+            // Format the description
+            const descriptionDiv = document.createElement("div");
+            descriptionDiv.className = "scene-description";
+
+            // Extract the first sentence
+            const sentences = scene.description.match(/[^.!?]+[.!?]/g) || [
+              scene.description,
+            ];
+            const firstSentence = sentences[0];
+            const hasMoreSentences = sentences.length > 1;
+
+            const formattedDescription = scene.description
+              .split("\n")
+              .map((line) => `<p>${line}</p>`)
+              .join(""); // Split by \n and wrap each line in a <p> tag
+
+            descriptionDiv.innerHTML = `<p>${firstSentence}${
+              hasMoreSentences ? " <strong>(more)</strong>" : ""
+            }</p>`; // Show only the first sentence with "(more)" if applicable
+            descriptionDiv.dataset.fullDescription = formattedDescription; // Store the full description
+            descriptionDiv.dataset.collapsed = "true"; // Track collapsed state
+
+            descriptionDiv.onclick = () => {
+              const isCollapsed = descriptionDiv.dataset.collapsed === "true";
+              descriptionDiv.innerHTML = isCollapsed
+                ? descriptionDiv.dataset.fullDescription
+                : `<p>${firstSentence}${
+                    hasMoreSentences ? " <strong>(more)</strong>" : ""
+                  }</p>`;
+              descriptionDiv.dataset.collapsed = isCollapsed ? "false" : "true";
+            };
+
+            descriptionDiv.style.border = "1px solid #33ff33";
+            descriptionDiv.style.backgroundColor = "rgba(51, 255, 51, 0.1)";
+            descriptionDiv.style.padding = "10px";
+            descriptionDiv.style.marginBottom = "10px";
+            descriptionDiv.style.cursor = "pointer";
+
+            sceneDiv.appendChild(descriptionDiv);
 
             // Create a flex container for images
             const imageFlexContainer = document.createElement("div");
@@ -660,6 +751,28 @@
                 soundLinksDiv.appendChild(soundLink);
               });
               sceneDiv.appendChild(soundLinksDiv);
+            }
+
+            // Add map links
+            if (scene.maps) {
+              const mapLinksDiv = document.createElement("div");
+              mapLinksDiv.style.marginTop = "10px";
+
+              scene.maps.forEach((mapImage) => {
+                const mapLink = document.createElement("a");
+                mapLink.href = "#";
+                mapLink.textContent = `View Map: ${mapImage}`;
+                mapLink.style.display = "block";
+                mapLink.style.color = "#33ff33";
+                mapLink.onclick = (event) => {
+                  event.preventDefault();
+                  sendMapToPlayerPage(
+                    `./scenarios/${getScenarioName()}/maps/${mapImage}`
+                  );
+                };
+                mapLinksDiv.appendChild(mapLink);
+              });
+              sceneDiv.appendChild(mapLinksDiv);
             }
 
             sceneDiv.appendChild(imageFlexContainer);
@@ -717,6 +830,12 @@
       function sendImageToPlayerPage(imageName) {
         if (window.playerWindow) {
           window.playerWindow.postMessage({ action: "image", imageName }, "*");
+        }
+      }
+
+      function sendMapToPlayerPage(mapPath) {
+        if (window.playerWindow) {
+          window.playerWindow.postMessage({ action: "map", mapPath }, "*");
         }
       }
 

@@ -116,33 +116,6 @@
         }
       }
 
-      .nav-buttons {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 20;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .nav-buttons button {
-        width: 40px;
-        height: 40px;
-        background-color: #003300;
-        color: #00ff00;
-        font-family: monospace;
-        font-size: 16px;
-        border: 1px solid #00ff00;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-
-      .nav-buttons button:hover {
-        background-color: #005500;
-      }
-
       #loading-spinner {
         position: fixed;
         top: 50%;
@@ -176,10 +149,6 @@
         <canvas id="mapCanvas"></canvas>
       </div>
     </div>
-    <div class="nav-buttons">
-      <button data-map="Heracles.png">H</button>
-      <button data-map="Tempest.png">T</button>
-    </div>
     <!-- CRT EFFECTS STAY FIXED -->
     <div class="crt-overlay">
       <div class="overlay-glow"></div>
@@ -208,6 +177,10 @@
 
       const img = new Image();
       img.crossOrigin = "anonymous";
+
+      // Get the map image from the query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const mapImage = urlParams.get("map");
 
       function loadMapImage(src) {
         document.getElementById("loading-spinner").style.display = "block";
@@ -267,7 +240,12 @@
         document.getElementById("loading-spinner").style.display = "none";
       };
 
-      loadMapImage("Tempest.png"); // initial map
+      // Load the map image passed in the query parameter
+      if (mapImage) {
+        loadMapImage(mapImage);
+      } else {
+        console.error("No map image provided in query parameters.");
+      }
 
       function updateTransform() {
         content.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
@@ -390,13 +368,6 @@
 
       setInterval(generateNoise, 60);
       window.addEventListener("resize", generateNoise);
-
-      document.querySelectorAll(".nav-buttons button").forEach((button) => {
-        button.addEventListener("click", () => {
-          const mapSrc = button.getAttribute("data-map");
-          loadMapImage(mapSrc);
-        });
-      });
 
       const distortionDuration = 1000; // 1 second
       const distortionInterval = 10000; // every 10 seconds

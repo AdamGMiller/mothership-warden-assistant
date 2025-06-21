@@ -2,13 +2,14 @@
   "areas": [
     {
       "order": 0,
-      "name": "Ypsilon 14 Mining Base",
+      "name": "Approaching Ypsilon 14 Mining Base",
       "scenes": [
         {
           "name": "Tempest Approach",
-          "description": "The cargo ship approaches the Ypsilon 14 Mining Base.",
+          "description": "The hiss of decompression signals the end of hypersleep. One by one, cryopods split open in the dim light of the crew bay, releasing a wash of cold vapor that clings to bare skin and fogs the floor like spilled coolant. The crew of the Tempest shivers their way upright, dressed only in briefs and tank tops, blinking against the harsh fluorescents. Muscles ache with the slow return of gravity’s pull, and the air tastes faintly of old metal and thawing plastic. No alarm bells, no emergency klaxons. Just routine — another delivery on another rock.\nYou move like seasoned freight hands, groaning through stretches, checking vitals on flickering wall displays, and scrubbing sleep from your faces with calloused palms. Coffee’s already bubbling in the galley, sharp and overcooked, as they cycle through cargo manifests and verify clamps on the hold. Somewhere out in the dark, just visible on the forward screen, Ypsilon 14 hangs like a coal smudge—no features, no fanfare, just three shaky landing beacons blinking red against the void. A place to unload, sign the form, and leave.\nThe familiar pre-dock ritual kicks in: tools checked, belts cinched, loaders prepped. Someone swears about a jammed lifter, another cracks a joke about Mike still owing them a round. They’re tired, underdressed, and irritable—but operational. The cargo doesn’t care about cryo hangovers, and neither does the clock. Systems begin cycling for final approach, and the hum of the bay grows louder beneath their bare feet. Ypsilon 14 is waiting.",
           "roomNumber": 101,
           "images": [
+            "Tempest-Hypersleep.png",
             "TempestBridge.png",
             "Approach.png",
             "MiningBaseExterior.png",
@@ -20,7 +21,8 @@
               "loop": true,
               "attribution": "Table Top Audio"
             }
-          ]
+          ],
+          "maps": ["Tempest.png"]
         }
       ]
     },
@@ -169,7 +171,8 @@
           "name": "Airlock",
           "description": "The airlock of the Heracles.",
           "roomNumber": 301,
-          "images": ["Heracles-Airlock.png"]
+          "images": ["Heracles-Airlock.png"],
+          "maps": ["Heracles.png"]
         },
         {
           "name": "Bridge",
