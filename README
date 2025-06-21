@@ -1,0 +1,46 @@
+# Mothership Warden Assistant
+
+## Introduction
+
+The Warden Assistant is designed to help run Mothership scenarios, providing images, music, and maps, as well as a way to track player status and present it to the players in a second monitor. This is primarily designed as an in-person experience, but screen sharing should allow use over the internet.
+
+## Setup
+
+You'll need to either copy the files to a web server, host the files locally (e.g. (IIS on Windows)[https://learn.microsoft.com/en-us/previous-versions/aspnet/ckk1e6z4(v=vs.100)]), or host the files on github.
+
+The sound files for the Ypsilon casette tapes aren't included in the repo, so you'll need to copy those into the sounds directory yourself.
+
+## How to Use
+
+### Your First Player
+
+- Click "Open Player Page" to open a second, child window. This can be dragged to a second monitor for players to view.
+- Edit the default "Player 1" character by clicking on the text below the portrait. Clicking on the portrait sends the picture to to player screen.
+- Enter a name (e.g. VASQUEZ, J)
+- Click the down arrow to pick a portrait.
+- For androids and marines, change the max wounds to 3
+- Adjust the current and max health accordingly.
+- Click Update
+
+### Adding New Players
+
+- After the edit screen is closed (by clicking Update), click the Add Player button
+- Edit as needed and click Update
+
+### Miscellaneous Player Management
+
+- Clicking the portrait sends the large image to the player screen
+- Remove a player by clicking the text beneath the portrait, clicking Remove, and saying yes to the confirmation dialog
+- After updating, changes to vitals, names, portrait, and other statistics will be updated on the player screen
+
+### Scenes
+
+- Expand and collapse the different scenes by clicking on the scene title
+- Click on the image to send the image to the player screen
+- Click the sound link to play the music or sound
+
+## Attribution
+
+While the contents of maps, scenes, project, and the html and javascript are licensed as CC0, note that sounds typically have their own attribution.
+
+Some maps used content from the (Starship Geomorphs book)[https://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html] which is licensed with (CC BY 4.0)[https://creativecommons.org/licenses/by/4.0/]

@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <style>
+      /* Retro green-screen CRT look */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Courier New", monospace;
+        background-color: #000;
+        color: #33ff33;
+        display: flex;
+        height: 100vh; /* Full viewport height */
+        overflow: hidden; /* Prevent scrolling */
+      }
+
+      #player-info {
+        width: 200px;
+        border-right: 2px solid #33ff33;
+        padding: 10px;
+        overflow-y: auto; /* Enable scrolling for the left panel */
+      }
+
+      #selected-image {
+        flex: 1; /* Take up remaining space */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow: hidden; /* Prevent overflow */
+      }
+
+      #selected-image img {
+        width: 100%; /* Stretch to fit available width */
+        height: auto; /* Maintain aspect ratio */
+        object-fit: contain; /* Ensure the image fits within the space without distortion */
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+        padding: 5px;
+      }
+
+      h1 {
+        text-align: center;
+        border-bottom: 2px solid #33ff33;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="player-info">
+      <h1>Player Information</h1>
+      <!-- Player information will be dynamically added here -->
+    </div>
+
+    <div id="selected-image">
+      <!-- Selected image will be displayed here -->
+    </div>
+
+    <script>
+      // Listen for postMessage events
+      window.addEventListener("message", (event) => {
+        const data = event.data;
+        console.log("Received message:", data);
+
+        // Handle the message based on the action property
+        if (data.action === "players" && data.players) {
+          const playerInfoDiv = document.getElementById("player-info");
+          playerInfoDiv.innerHTML = ""; // Clear existing content
+
+          data.players.forEach((player, index) => {
+            const playerDiv = document.createElement("div");
+            playerDiv.innerHTML = `
+              <iframe id="status-iframe-${index}" src="./hud/status.html" style="width: 200px; height: 100px; border: none;"></iframe>
+            `;
+            playerInfoDiv.appendChild(playerDiv);
+
+            // Get a handle to the newly created iframe
+            const iframe = document.getElementById(`status-iframe-${index}`);
+            if (iframe) {
+              // Wait for the iframe to be fully loaded before sending the message
+              iframe.onload = () => {
+                console.log(`Iframe ${index} is ready. Sending player data...`);
+                iframe.contentWindow.postMessage(player, "*");
+              };
+            }
+          });
+        } else if (data.action === "image" && data.imageName) {
+          console.log("Received image message:", data.imageName);
+          const selectedImageDiv = document.getElementById("selected-image");
+          selectedImageDiv.innerHTML = `
+            <img src="${data.imageName}" alt="${data.imageName}">
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,274 @@
+{
+  "areas": [
+    {
+      "order": 0,
+      "name": "Ypsilon 14 Mining Base",
+      "scenes": [
+        {
+          "name": "Tempest Approach",
+          "description": "The cargo ship approaches the Ypsilon 14 Mining Base.",
+          "roomNumber": 101,
+          "images": [
+            "TempestBridge.png",
+            "Approach.png",
+            "MiningBaseExterior.png",
+            "Airlock.png"
+          ],
+          "sounds": [
+            {
+              "sound": "152_Nostromo.mp3",
+              "loop": true,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "order": 1,
+      "name": "Characters",
+      "scenes": [
+        {
+          "name": "Characters",
+          "description": "Non player characters.",
+          "roomNumber": 999,
+          "images": [
+            "Ashraf.png",
+            "Dana.png",
+            "Jerome.png",
+            "Kantaro.png",
+            "Mike.png",
+            "Morgan.png",
+            "Prince.png",
+            "Rie.png",
+            "Rosa.png",
+            "Sonya.png"
+          ]
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "name": "Mining Base",
+      "scenes": [
+        {
+          "name": "Docking Bay 2",
+          "description": "Docking Bay 2 of the mining base.",
+          "roomNumber": 201,
+          "images": ["Docking Bay 2.png"],
+          "sounds": [
+            {
+              "sound": "106_Lunar_Outpost.mp3",
+              "loop": true,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        },
+        {
+          "name": "Workspace",
+          "description": "Workspace area in the mining base.",
+          "roomNumber": 202,
+          "images": [
+            "Workspace.png",
+            "Cargo Lift.png",
+            "Console.png",
+            "Generator.png"
+          ]
+        },
+        {
+          "name": "Quarters",
+          "description": "Living quarters in the mining base.",
+          "roomNumber": 203,
+          "images": [
+            "cabin-ashraf.png",
+            "cabin-dana.png",
+            "cabin-kantaro.png",
+            "cabin-mike.png",
+            "cabin-morgan.png",
+            "cabin-rie.png",
+            "cabin-rosa.png",
+            "cabin-unused.png"
+          ]
+        },
+        {
+          "name": "Mess",
+          "description": "Cafeteria and mess area.",
+          "roomNumber": 204,
+          "images": ["Cafeteria.png", "HydroponicsGarden.png"],
+          "sounds": [
+            {
+              "sound": "Mothership-Ypsilon-14-Blue-Cassette.mp3",
+              "loop": false,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        },
+        {
+          "name": "Washrooms",
+          "description": "Washrooms in the mining base.",
+          "roomNumber": 205,
+          "images": ["Mining Shower.png", "Mining Shower Broken.png"]
+        },
+        {
+          "name": "Mine Entrance",
+          "description": "Entrance to the mine.",
+          "roomNumber": 206,
+          "images": ["MineEntrance.png"],
+          "sounds": [
+            {
+              "sound": "427_Bug_Hunt.mp3",
+              "loop": true,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        },
+        {
+          "name": "Mine Tunnel",
+          "description": "Tunnel leading deeper into the mine.",
+          "roomNumber": 207,
+          "images": ["MiningTunnel.png", "Mine Crossroads.png", "Mines.png"]
+        },
+        {
+          "name": "Mine Depths",
+          "description": "The depths of the mine.",
+          "roomNumber": 208,
+          "images": ["Mine Depths.png"]
+        },
+        {
+          "name": "Mine Antechamber",
+          "description": "Antechamber in the mine.",
+          "roomNumber": 209,
+          "images": ["Mine Antechamber.png"]
+        },
+        {
+          "name": "Docking Bay 1",
+          "description": "Docking Bay 1 of the mining base.",
+          "roomNumber": 210,
+          "images": ["Docking Bay 1.png"]
+        },
+        {
+          "name": "Crawlspace",
+          "description": "Allows access around the mining base.",
+          "roomNumber": 211,
+          "images": ["Crawlspace.png"],
+          "sounds": [
+            {
+              "sound": "Mothership-Ypsilon-14-Yellow-Cassette.mp3",
+              "loop": false,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "name": "Heracles",
+      "scenes": [
+        {
+          "name": "Airlock",
+          "description": "The airlock of the Heracles.",
+          "roomNumber": 301,
+          "images": ["Heracles-Airlock.png"]
+        },
+        {
+          "name": "Bridge",
+          "description": "The bridge of the Heracles.",
+          "roomNumber": 302,
+          "images": ["Heracles-Bridge.png"]
+        },
+        {
+          "name": "Engine Room",
+          "description": "The engine room of the Heracles.",
+          "roomNumber": 303,
+          "images": ["Heracles-Engine Room.png"]
+        },
+        {
+          "name": "Galley",
+          "description": "The galley of the Heracles.",
+          "roomNumber": 304,
+          "images": ["Heracles-Galley.png"]
+        },
+        {
+          "name": "Hypersleep",
+          "description": "Hypersleep chambers on the Heracles.",
+          "roomNumber": 305,
+          "images": ["Heracles-Hypersleep.png"]
+        },
+        {
+          "name": "Lab",
+          "description": "The lab on the Heracles.",
+          "roomNumber": 306,
+          "images": [
+            "Heracles-Lab.png",
+            "Heracles-Main Lab.png",
+            "Ethan Giovanni Away.png",
+            "Ethan Giovanni.png"
+          ],
+          "sounds": [
+            {
+              "sound": "Mothership-Ypsilon-14-White-Cassette.mp3",
+              "loop": false,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        },
+        {
+          "name": "Stateroom",
+          "description": "The stateroom of the Heracles.",
+          "roomNumber": 307,
+          "images": ["Heracles-Stateroom.png"]
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "name": "Miscellaneous",
+      "scenes": [
+        {
+          "name": "The Monster",
+          "description": "The invisible monster",
+          "roomNumber": 103,
+          "images": [
+            "Infrared.png",
+            "MonsterEating1.png",
+            "MonsterEating2.png",
+            "MonsterEating3.png"
+          ],
+          "sounds": [
+            {
+              "sound": "427_Bug_Hunt.mp3",
+              "loop": true,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        },
+        {
+          "name": "Escape Ypsilon 14",
+          "description": "Escape from the asteroid.",
+          "roomNumber": 103,
+          "images": [
+            "AsteroidExplosion.png",
+            "TempestEscape.png",
+            "HeraclesEscaping.png"
+          ],
+          "sounds": [
+            {
+              "sound": "156_Star_Freighter.mp3",
+              "loop": true,
+              "attribution": "Table Top Audio"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "attributions": [
+    {
+      "name": "Table Top Audio",
+      "role": "Music and Sound Effects",
+      "license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
+      "contact": "https://tabletopaudio.com/"
+    }
+  ]
+}

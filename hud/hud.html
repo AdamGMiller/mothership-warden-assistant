@@ -1,0 +1,88 @@
+<html>
+  <body>
+    <div style="display: flex; align-items: center">
+      <!-- Iframe displaying the status -->
+      <iframe
+        id="status-iframe"
+        src="./status.html"
+        style="width: 200px; height: 100px; border: none; margin-right: 10px"
+      ></iframe>
+
+      <!-- Test controls -->
+      <div>
+        <label>
+          Stress:
+          <input id="stress-input" type="number" value="0" min="0" max="100" />
+        </label>
+        <br />
+        <label>
+          Health:
+          <input
+            id="health-input"
+            type="number"
+            value="100"
+            min="0"
+            max="100"
+          />
+        </label>
+        <br />
+        <label>
+          Status:
+          <input id="status-input" type="text" value="test status" />
+        </label>
+        <br />
+        <label>
+          Name:
+          <input id="name-input" type="text" value="Player Name" />
+        </label>
+        <br />
+        <label>
+          Portrait:
+          <input id="portrait-input" type="text" value="headshot1.png" />
+        </label>
+        <br />
+        <button onclick="updateIframe()">Update</button>
+      </div>
+    </div>
+
+    <script>
+      let debounceTimeout;
+
+      function debounceUpdateIframe() {
+        clearTimeout(debounceTimeout); // Clear the previous timeout
+        debounceTimeout = setTimeout(updateIframe, 500); // Set a new timeout for 500ms
+      }
+
+      function updateIframe() {
+        const stress = document.getElementById("stress-input").value;
+        const health = document.getElementById("health-input").value;
+        const status = document.getElementById("status-input").value;
+        const name = document.getElementById("name-input").value;
+        const portrait = document.getElementById("portrait-input").value;
+
+        const iframe = document.getElementById("status-iframe");
+        const message = { stress, health, status, name, portrait };
+
+        // Send the message to the iframe
+        iframe.contentWindow.postMessage(message, "*");
+      }
+
+      // Attach event listeners to all controls
+      document
+        .getElementById("stress-input")
+        .addEventListener("input", debounceUpdateIframe);
+      document
+        .getElementById("health-input")
+        .addEventListener("input", debounceUpdateIframe);
+      document
+        .getElementById("status-input")
+        .addEventListener("input", debounceUpdateIframe);
+      document
+        .getElementById("name-input")
+        .addEventListener("input", debounceUpdateIframe);
+      document
+        .getElementById("portrait-input")
+        .addEventListener("input", debounceUpdateIframe);
+    </script>
+  </body>
+</html>

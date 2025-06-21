@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Status</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Courier New", monospace;
+        background-color: #000;
+        color: #33ff33;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start; /* Align content to the left */
+        width: 200px;
+        height: 100px;
+        box-sizing: border-box;
+        border: 2px solid #33ff33; /* Add green border around the entire status */
+      }
+
+      .portrait {
+        width: 150px; /* Increase the portrait width */
+        height: 100%; /* Scale the height to fit the space */
+        background-size: cover;
+        background-position: center;
+        z-index: 10; /* Ensure portrait is above other elements */
+        position: relative;
+      }
+
+      .heartbeat-container {
+        position: relative;
+        width: 140px;
+        height: 100%; /* Match the height of the portrait */
+        margin-left: 10px; /* Add spacing between portrait and heartbeat */
+        overflow: hidden;
+      }
+
+      .heartbeat-svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .fade-dot {
+        animation: fadeDot 1s linear infinite;
+      }
+
+      @keyframes fadeDot {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .status-message {
+        position: absolute;
+        bottom: 5px;
+        left: 105px;
+        max-width: 95px;
+        font-size: 10px;
+        color: #33ff33;
+        text-align: right;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .name-display {
+        position: absolute;
+        top: 5px;
+        left: 105px;
+        max-width: 95px;
+        font-size: 12px;
+        color: #33ff33;
+        text-align: right;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="portrait" class="portrait"></div>
+    <div class="heartbeat-container">
+      <svg
+        class="heartbeat-svg"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 150 50"
+      >
+        <defs>
+          <!-- Gradient for fade-in -->
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#000" stop-opacity="1" />
+            <stop offset="100%" stop-color="#000" stop-opacity="0" />
+          </linearGradient>
+          <!-- Reverse gradient for fade-out -->
+          <linearGradient
+            id="reverse-gradient"
+            x1="100%"
+            y1="0%"
+            x2="0%"
+            y2="0%"
+          >
+            <stop offset="0%" stop-color="#000" stop-opacity="0" />
+            <stop offset="100%" stop-color="#000" stop-opacity="1" />
+          </linearGradient>
+        </defs>
+
+        <polyline
+          id="heartbeat-line"
+          fill="none"
+          stroke="#33ff33"
+          stroke-width="2"
+          stroke-miterlimit="10"
+          points="0,25 30,25 35,15 40,25 45,25 50,35 60,5 70,45 75,25 90,25 95,20 100,25 150,25"
+        ></polyline>
+        <rect
+          id="fade-out"
+          x="-150"
+          y="-50"
+          width="150"
+          height="125"
+          fill="url(#reverse-gradient)"
+        ></rect>
+        <rect
+          id="fade-in"
+          x="0"
+          y="-50"
+          width="150"
+          height="125"
+          fill="url(#gradient)"
+        ></rect>
+        <circle
+          id="heartbeat-dot"
+          cx="0"
+          cy="25"
+          r="3"
+          fill="#33ff33"
+          class="fade-dot"
+        ></circle>
+      </svg>
+    </div>
+    <div class="status-message" id="status-message"></div>
+    <div class="name-display" id="name-display"></div>
+  </body>
+  <script>
+    let heartbeatInterval; // Store the interval ID globally
+
+    // Heartbeat animation logic
+    function updateHeartbeat(health, stress) {
+      const heartbeatLine = document.getElementById("heartbeat-line");
+      const heartbeatDot = document.getElementById("heartbeat-dot");
+      const fadeInRect = document.getElementById("fade-in");
+      const fadeOutRect = document.getElementById("fade-out");
+
+      const basePattern = [
+        "0,25",
+        "30,25",
+        "35,5",
+        "40,25",
+        "45,25",
+        "50,45",
+        "60,-20",
+        "70,45",
+        "75,25",
+        "90,25",
+        "95,10",
+        "100,25",
+      ];
+
+      const repetitions = 1 + Math.floor((stress / 100) * 4);
+      const extendedPattern = [];
+      for (let i = 0; i < repetitions; i++) {
+        const offset = i * 100;
+        basePattern.forEach((point) => {
+          const [x, y] = point.split(",");
+          extendedPattern.push(`${parseInt(x, 10) + offset},${y}`);
+        });
+      }
+
+      const maxX = 142;
+      const scaleFactor = maxX / (repetitions * 100);
+      const scaledPoints = extendedPattern.map((point) => {
+        const [x, y] = point.split(",");
+        const scaledX = Math.round(parseInt(x, 10) * scaleFactor);
+        return `${scaledX},${y}`;
+      });
+
+      const adjustedPoints = scaledPoints.map((point) => {
+        const [x, y] = point.split(",");
+        const adjustedY = 25 + (y - 25) * (health / 100);
+        return `${x},${adjustedY}`;
+      });
+
+      heartbeatLine.setAttribute("points", adjustedPoints.join(" "));
+
+      const duration = 2;
+
+      let currentIndex = 0;
+      const totalPoints = adjustedPoints.length;
+
+      function animateDot() {
+        const [dotX, dotY] = adjustedPoints[currentIndex].split(",");
+        heartbeatDot.setAttribute("cx", dotX);
+        heartbeatDot.setAttribute("cy", dotY);
+
+        fadeInRect.setAttribute("x", dotX);
+        fadeOutRect.setAttribute("x", dotX - 150);
+
+        heartbeatDot.style.animation = "none";
+        setTimeout(() => {
+          heartbeatDot.style.animation = `fadeDot ${duration}s linear`;
+        }, 0);
+
+        currentIndex = (currentIndex + 1) % totalPoints;
+      }
+
+      // Clear the existing interval if it exists
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+      }
+
+      // Set a new interval for the heartbeat animation
+      heartbeatInterval = setInterval(
+        animateDot,
+        (duration * 1000) / totalPoints
+      );
+    }
+
+    window.addEventListener("message", (event) => {
+      console.log("Received message:", event.data);
+      const {
+        maxStress,
+        currentStress,
+        maxHealth,
+        currentHealth,
+        maxWounds,
+        currentWounds,
+        status,
+        name,
+        portrait,
+      } = event.data;
+
+      // calculate health and stress percentages
+      const maxHealthTotal = maxHealth * maxWounds;
+      const healthDamageFromWounds = currentWounds * maxHealth;
+      const currentAdjustedHealth =
+        maxHealthTotal - healthDamageFromWounds - (maxHealth - currentHealth);
+
+      const health = Math.round((currentAdjustedHealth / maxHealthTotal) * 100);
+      const stress = Math.round((currentStress / maxStress) * 100);
+
+      // Update the status message
+      const statusMessageElement = document.getElementById("status-message");
+      statusMessageElement.textContent = `${status}`;
+
+      // Update the name display
+      const nameDisplayElement = document.getElementById("name-display");
+      nameDisplayElement.textContent = name;
+
+      // Update the portrait
+      const portraitElement = document.getElementById("portrait");
+      portraitElement.style.backgroundImage = `url('../portraits/${portrait}')`;
+
+      // Update heartbeat animation logic
+      updateHeartbeat(health, stress);
+    });
+  </script>
+</html>

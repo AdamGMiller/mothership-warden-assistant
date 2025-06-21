@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mothership</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Courier New", monospace;
+        background-color: #000;
+        color: #33ff33;
+        display: flex;
+        height: 100vh; /* Full viewport height */
+        overflow: hidden; /* Prevent body scrolling */
+      }
+
+      .main-content {
+        width: 80%;
+        padding: 20px;
+        border-right: 2px solid #33ff33;
+        overflow-y: auto; /* Enable independent scrolling */
+        height: 100%; /* Full height for scrolling */
+      }
+
+      .form-container {
+        width: 20%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto; /* Enable independent scrolling */
+        height: 100%; /* Full height for scrolling */
+        right: 0; /* Align to the right */
+        top: 0; /* Align to the top */
+      }
+
+      .form-container h2 {
+        font-size: 14px; /* Reduce font size */
+        margin-bottom: 5px; /* Tighten spacing */
+        text-transform: uppercase;
+        border-bottom: 1px solid #33ff33;
+        padding-bottom: 3px; /* Tighten spacing */
+      }
+
+      .form-container label {
+        font-size: 10px; /* Reduce font size */
+        margin-top: 5px; /* Tighten spacing */
+        display: block;
+      }
+
+      .form-container input,
+      .form-container select,
+      .form-container button {
+        width: 100%;
+        margin-top: 3px; /* Tighten spacing */
+        padding: 3px; /* Reduce padding */
+        background-color: #222;
+        color: #33ff33;
+        border: 1px solid #33ff33;
+        font-family: "Courier New", monospace;
+        font-size: 10px; /* Reduce font size */
+      }
+
+      .form-container button {
+        margin-top: 3px; /* Tighten spacing */
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+
+      .player-list {
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        overflow-y: auto;
+      }
+
+      .player-card {
+        width: calc(50% - 15px); /* Compact width */
+        border: 1px solid #33ff33;
+        padding: 5px; /* Reduce padding */
+        background-color: #111;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 10px; /* Reduce font size */
+        cursor: pointer; /* Display hand cursor */
+      }
+
+      .player-card img {
+        width: 100px; /* Smaller image */
+        height: 100px;
+        object-fit: cover;
+        border: 1px solid #33ff33;
+        margin-bottom: 5px; /* Reduce margin */
+      }
+
+      .player-card h3 {
+        font-size: 12px; /* Smaller font size */
+        margin: 0;
+      }
+
+      .player-card p {
+        font-size: 10px; /* Smaller font size */
+        margin: 2px 0; /* Reduce spacing */
+      }
+
+      .portrait-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 5px;
+        margin-top: 10px;
+        border: 1px solid #33ff33;
+        padding: 10px;
+        background-color: #111;
+      }
+
+      .portrait-grid img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 1px solid #33ff33;
+      }
+
+      .portrait-grid img:hover {
+        border-color: #ff3333;
+      }
+
+      .selected-portrait {
+        border-color: #ffcc00;
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+      }
+
+      .portrait-list {
+        display: none;
+        position: absolute;
+        width: 300px;
+        max-height: 50%;
+        overflow-y: auto;
+        background-color: #111;
+        border: 1px solid #33ff33;
+        padding: 10px;
+        z-index: 1000;
+      }
+
+      .portrait-list img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 1px solid #33ff33;
+        margin: 5px;
+      }
+
+      .portrait-list img:hover {
+        border-color: #ff3333;
+      }
+
+      .area {
+        margin-bottom: 20px;
+      }
+
+      .area h1 {
+        cursor: pointer; /* Hand cursor for expand/collapse button */
+        text-transform: uppercase;
+        border-bottom: 1px solid #33ff33;
+        padding-bottom: 5px;
+      }
+
+      .scene-images {
+        display: none; /* Initially collapsed */
+        margin-left: 10px;
+      }
+
+      .scene-image-container {
+        text-align: center;
+        margin: 10px;
+      }
+
+      .scene-image-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        cursor: pointer; /* Hand cursor on hover */
+        margin-bottom: 5px;
+      }
+
+      .scene-image-container p {
+        font-size: 12px;
+        margin: 0;
+        color: #33ff33;
+      }
+
+      /* Style the scrollbar for main-content */
+      .main-content::-webkit-scrollbar {
+        width: 10px; /* Width of the scrollbar */
+      }
+
+      .main-content::-webkit-scrollbar-track {
+        background: #111; /* Dark background for the scrollbar track */
+        border: 1px solid #33ff33; /* Green border around the track */
+      }
+
+      .main-content::-webkit-scrollbar-thumb {
+        background: #33ff33; /* Green scrollbar thumb */
+        border: 2px solid #111; /* Dark border around the thumb */
+        border-radius: 5px; /* Rounded corners for the thumb */
+      }
+
+      .main-content::-webkit-scrollbar-thumb:hover {
+        background: #66ff66; /* Lighter green when hovered */
+      }
+
+      .main-content::-webkit-scrollbar-thumb:active {
+        background: #99ff99; /* Even lighter green when active */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-content">
+      <h1>Mothership Game Master Screen</h1>
+      <label for="scenario-select">Select Scenario:</label>
+      <select id="scenario-select" onchange="loadScenario()">
+        <option value="ypsilon">The Haunting of Ypsilon 14</option>
+      </select>
+      <!-- Add this button somewhere in index.html -->
+      <button onclick="openPlayerPage()">Open Player Page</button>
+
+      <div id="scenario-content">
+        <!-- Scenario content will be dynamically added here -->
+      </div>
+    </div>
+    <div class="form-container">
+      <audio
+        id="sound-player"
+        controls
+        style="width: 100%; margin-bottom: 10px"
+      >
+        <!-- Sound player for playing scene sounds -->
+      </audio>
+      <div
+        id="current-sound"
+        style="
+          text-align: center;
+          font-family: 'Courier New', monospace;
+          color: #33ff33;
+          margin-top: 5px;
+        "
+      >
+        <!-- Current sound playing will be displayed here -->
+      </div>
+      <div style="border-bottom: 2px solid #33ff33; margin-bottom: 10px"></div>
+
+      <div class="player-list" id="player-list">
+        <!-- Player cards will be dynamically added here -->
+      </div>
+
+      <div class="player-edit-form" id="player-edit-form" style="display: none">
+        <h2>Edit Player</h2>
+
+        <input type="input" id="player-select" style="visibility: hidden" />
+
+        <label for="player-name">Name:</label>
+        <div style="display: flex; gap: 5px; align-items: center">
+          <input id="player-name" type="text" />
+          <input id="player-portrait" type="text" />
+          <button
+            id="portrait-dropdown-button"
+            class="portrait-dropdown-button"
+            onclick="togglePortraitList()"
+          >
+            ▼
+          </button>
+        </div>
+
+        <div id="portrait-list" class="portrait-list">
+          <!-- Portrait options will be dynamically added here -->
+        </div>
+
+        <label>Health and Stress:</label>
+        <div style="display: flex; gap: 5px; align-items: center">
+          <input
+            id="player-current-health"
+            type="number"
+            maxlength="2"
+            placeholder="Health"
+          />
+          <span>/</span>
+          <input
+            id="player-max-health"
+            type="number"
+            maxlength="2"
+            placeholder="Max ♥"
+          />
+          <input
+            id="player-current-stress"
+            type="number"
+            maxlength="2"
+            placeholder="Stress"
+          />
+          <span>/</span>
+          <input
+            id="player-max-stress"
+            type="number"
+            maxlength="2"
+            placeholder="Max"
+          />
+        </div>
+
+        <label>Wounds and Status:</label>
+        <div style="display: flex; gap: 5px; align-items: center">
+          <input
+            id="player-current-wounds"
+            type="number"
+            maxlength="1"
+            placeholder="Wounds"
+          />
+          <span>/</span>
+          <input
+            id="player-max-wounds"
+            type="number"
+            maxlength="1"
+            placeholder="Max"
+          />
+          <input id="player-status" type="text" placeholder="Status" />
+        </div>
+
+        <div style="display: flex; gap: 5px; align-items: center">
+          <button onclick="removePlayer()" style="width: 80px">Remove</button>
+          <button onclick="updatePlayer()">Update</button>
+        </div>
+      </div>
+
+      <button id="add-player-button" onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <script>
+      const players = JSON.parse(localStorage.getItem("players")) || [
+        {
+          name: "Player 1",
+          maxHealth: 15,
+          maxWounds: 5,
+          currentHealth: 15,
+          currentWounds: 0,
+          maxStress: 20,
+          currentStress: 2,
+          status: "Active",
+          portrait: "Android1.png",
+        },
+      ];
+
+      function savePlayersToLocalStorage() {
+        localStorage.setItem("players", JSON.stringify(players));
+      }
+
+      function populatePortraitList() {
+        const portraitList = document.getElementById("portrait-list");
+        const prefixCounts = {
+          Android: 11,
+          Marine: 17,
+          Teamster: 12,
+          Scientist: 14,
+        };
+
+        portraitList.innerHTML = ""; // Clear existing options
+
+        Object.entries(prefixCounts).forEach(([prefix, count]) => {
+          for (let i = 1; i <= count; i++) {
+            const img = document.createElement("img");
+            img.src = `./portraits/${prefix}${i}.png`;
+            img.alt = `${prefix}${i}`;
+            img.onclick = () => selectPortrait(`${prefix}${i}.png`);
+            portraitList.appendChild(img);
+          }
+        });
+      }
+
+      function togglePortraitList() {
+        const portraitList = document.getElementById("portrait-list");
+        const button = document.getElementById("portrait-dropdown-button");
+        const rect = button.getBoundingClientRect();
+
+        // Position the portrait list under the button
+        //portraitList.style.top = `${rect.bottom + window.scrollY}px`;
+        //portraitList.style.left = `${rect.left + window.scrollX}px`;
+
+        // Toggle visibility
+        portraitList.style.display =
+          portraitList.style.display === "block" ? "none" : "block";
+
+        // Add event listener to hide the list when clicking outside
+        document.addEventListener("click", hidePortraitListOnClickOutside);
+      }
+
+      function hidePortraitListOnClickOutside(event) {
+        const portraitList = document.getElementById("portrait-list");
+        const button = document.getElementById("portrait-dropdown-button");
+
+        // Check if the click is outside the portrait list and button
+        if (!portraitList.contains(event.target) && event.target !== button) {
+          portraitList.style.display = "none";
+          document.removeEventListener("click", hidePortraitListOnClickOutside);
+        }
+      }
+
+      function selectPortrait(portrait) {
+        const portraitDisplay = document.getElementById(
+          "player-portrait-display"
+        );
+        //portraitDisplay.src = `./portraits/${portrait}`;
+        document.getElementById("player-portrait").value = portrait;
+
+        // Hide the portrait list after selecting a portrait
+        document.getElementById("portrait-list").style.display = "none";
+      }
+
+      function loadPlayerIntoForm(index) {
+        const playerEditForm = document.getElementById("player-edit-form");
+        const addPlayerButton = document.getElementById("add-player-button");
+        const playerSelect = document.getElementById("player-select");
+        const player = players[index];
+        if (!player) {
+          playerEditForm.style.display = "none"; // Hide the form if no player is selected
+          addPlayerButton.style.display = "block"; // Show the Add Player button
+          playerSelect.value = ""; // Clear the hidden input
+          return;
+        }
+
+        playerEditForm.style.display = "block"; // Show the form when a player is selected
+        addPlayerButton.style.display = "none"; // Hide the Add Player button
+        playerSelect.value = index; // Set the hidden input to the selected player's index
+        document.getElementById("player-name").value = player.name;
+        document.getElementById("player-max-health").value = player.maxHealth;
+        document.getElementById("player-current-health").value =
+          player.currentHealth;
+        document.getElementById("player-max-stress").value = player.maxStress;
+        document.getElementById("player-current-stress").value =
+          player.currentStress;
+        document.getElementById("player-max-wounds").value = player.maxWounds;
+        document.getElementById("player-current-wounds").value =
+          player.currentWounds;
+        document.getElementById("player-status").value = player.status;
+        document.getElementById("player-portrait").value = player.portrait;
+      }
+
+      function selectPlayerByPortrait(name) {
+        const index = players.findIndex((player) => player.name === name);
+        if (index !== -1) {
+          loadPlayerIntoForm(index);
+        }
+      }
+
+      function removePlayer() {
+        const playerSelect = document.getElementById("player-select");
+        const index = playerSelect.value;
+        const player = players[index];
+        if (!player) return;
+
+        const confirmation = confirm(
+          `Are you sure you want to delete ${player.name}?`
+        );
+        if (confirmation) {
+          players.splice(index, 1);
+          savePlayersToLocalStorage();
+          renderPlayers();
+        }
+      }
+
+      function renderPlayers() {
+        const playerList = document.getElementById("player-list");
+        playerList.innerHTML = "";
+
+        players.forEach((player, index) => {
+          const playerCard = document.createElement("div");
+          playerCard.className = "player-card";
+
+          // Create the player image element
+          const playerImage = document.createElement("img");
+          playerImage.src = `./portraits/${player.portrait}`;
+          playerImage.alt = `${player.name}`;
+          playerImage.onclick = () =>
+            sendImageToPlayerPage(`./portraits/${player.portrait}`); // Send image to player.html
+
+          // Create the player text container
+          const playerText = document.createElement("div");
+          playerText.innerHTML = `
+      <h3>${player.name}</h3>
+      <p>Health: ${player.currentHealth}/${player.maxHealth}</p>
+      <p>Wounds: ${player.currentWounds}/${player.maxWounds}</p>
+      <p>Stress: ${player.currentStress}/${player.maxStress}</p>
+      <p>Status: ${player.status}</p>
+    `;
+          playerText.onclick = () => loadPlayerIntoForm(index); // Open player edit form
+
+          // Append the image and text to the player card
+          playerCard.appendChild(playerImage);
+          playerCard.appendChild(playerText);
+
+          playerList.appendChild(playerCard);
+        });
+
+        // Hide the form if no player is selected
+        const playerEditForm = document.getElementById("player-edit-form");
+        const playerSelect = document.getElementById("player-select");
+        if (!playerSelect.value) {
+          playerEditForm.style.display = "none";
+        }
+      }
+
+      function updatePlayer() {
+        const index = document.getElementById("player-select").value;
+        const player = players[index];
+        if (!player) return;
+
+        player.name = document.getElementById("player-name").value;
+        player.maxHealth = parseInt(
+          document.getElementById("player-max-health").value,
+          10
+        );
+        player.maxWounds = parseInt(
+          document.getElementById("player-max-wounds").value,
+          10
+        );
+        player.currentHealth = parseInt(
+          document.getElementById("player-current-health").value,
+          10
+        );
+        player.currentWounds = parseInt(
+          document.getElementById("player-current-wounds").value,
+          10
+        );
+        player.maxStress = parseInt(
+          document.getElementById("player-max-stress").value,
+          10
+        );
+        player.currentStress = parseInt(
+          document.getElementById("player-current-stress").value,
+          10
+        );
+        player.status = document.getElementById("player-status").value;
+        player.portrait = document.getElementById("player-portrait").value;
+
+        savePlayersToLocalStorage();
+        renderPlayers();
+        sendPlayerInfoToPlayerPage();
+
+        // Hide the form after updating
+        document.getElementById("player-edit-form").style.display = "none";
+
+        // Show the Add Player button after updating
+        const addPlayerButton = document.getElementById("add-player-button");
+        addPlayerButton.style.display = "block"; // Hide the Add Player button
+      }
+
+      function addPlayer() {
+        players.push({
+          name: "New Player",
+          maxHealth: 15,
+          maxWounds: 2,
+          currentHealth: 15,
+          currentWounds: 0,
+          maxStress: 20,
+          currentStress: 2,
+          status: "",
+          portrait: "Android1.png",
+        });
+
+        savePlayersToLocalStorage();
+        renderPlayers();
+      }
+
+      function loadScenario() {
+        const scenarioSelect = document.getElementById("scenario-select");
+        const scenarioValue = scenarioSelect.value;
+
+        // Save the selected scenario to local storage
+        localStorage.setItem("selectedScenario", scenarioValue);
+
+        // Load the scenario JSON file
+        fetch(`./scenarios/${scenarioValue}/scenario.json`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to load scenario: ${scenarioValue}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            renderScenario(data);
+          })
+          .catch((error) => {
+            console.error(error);
+            document.getElementById("scenario-content").innerHTML =
+              "<p>Error loading scenario.</p>";
+          });
+      }
+
+      function getScenarioName() {
+        // Get the scenario name from local storage or the select element
+        const scenarioSelect = document.getElementById("scenario-select");
+        const savedScenario = localStorage.getItem("selectedScenario");
+        return savedScenario || scenarioSelect.value;
+      }
+
+      function renderScenario(scenarioData) {
+        const scenarioContent = document.getElementById("scenario-content");
+        scenarioContent.innerHTML = ""; // Clear existing content
+
+        // Render areas
+        scenarioData.areas.forEach((area) => {
+          const areaDiv = document.createElement("div");
+          areaDiv.className = "area";
+
+          const areaHeader = document.createElement("h1");
+          areaHeader.textContent = area.name;
+          areaHeader.onclick = () => toggleArea(areaDiv);
+
+          const sceneImagesDiv = document.createElement("div");
+          sceneImagesDiv.className = "scene-images";
+
+          area.scenes.forEach((scene) => {
+            const sceneDiv = document.createElement("div");
+            sceneDiv.innerHTML = `<h2>${scene.name}</h2><p>${scene.description}</p>`;
+
+            // Create a flex container for images
+            const imageFlexContainer = document.createElement("div");
+            imageFlexContainer.style.display = "flex";
+            imageFlexContainer.style.flexWrap = "wrap";
+            imageFlexContainer.style.gap = "10px";
+
+            scene.images.forEach((image) => {
+              const imageContainer = document.createElement("div");
+              imageContainer.className = "scene-image-container";
+              imageContainer.innerHTML = `
+          <img src="./scenarios/${getScenarioName()}/scenes/${image}" alt="${image}" onclick="sendImageToPlayerPage('${image}')">
+          <p>${image}</p>
+        `;
+              imageFlexContainer.appendChild(imageContainer);
+            });
+
+            // Add sound links
+            if (scene.sounds) {
+              const soundLinksDiv = document.createElement("div");
+              soundLinksDiv.style.marginTop = "10px";
+
+              scene.sounds.forEach((sound) => {
+                const soundLink = document.createElement("a");
+                soundLink.href = "#";
+                soundLink.textContent = `Play Sound: ${sound.sound}`;
+                soundLink.style.display = "block";
+                soundLink.style.color = "#33ff33";
+                soundLink.onclick = (event) => {
+                  event.preventDefault();
+                  playSound(
+                    `./scenarios/${getScenarioName()}/sounds/${sound.sound}`,
+                    sound.loop
+                  );
+                };
+                soundLinksDiv.appendChild(soundLink);
+              });
+              sceneDiv.appendChild(soundLinksDiv);
+            }
+
+            sceneDiv.appendChild(imageFlexContainer);
+            sceneImagesDiv.appendChild(sceneDiv);
+          });
+
+          areaDiv.appendChild(areaHeader);
+          areaDiv.appendChild(sceneImagesDiv);
+          scenarioContent.appendChild(areaDiv);
+        });
+
+        // Render attributions
+        const attributionDiv = document.createElement("div");
+        attributionDiv.className = "attributions";
+        attributionDiv.innerHTML = "<h1>Attributions</h1>";
+
+        scenarioData.attributions.forEach((attribution) => {
+          const attributionItem = document.createElement("p");
+          attributionItem.innerHTML = `<strong>${attribution.name}</strong> - ${attribution.role} (${attribution.contact})`;
+          attributionDiv.appendChild(attributionItem);
+        });
+
+        scenarioContent.appendChild(attributionDiv);
+      }
+
+      function toggleArea(areaDiv) {
+        const sceneImagesDiv = areaDiv.querySelector(".scene-images");
+        sceneImagesDiv.style.display =
+          sceneImagesDiv.style.display === "block" ? "none" : "block";
+      }
+
+      function openPlayerPage() {
+        // Open player.html in a new window
+        window.playerWindow = window.open("./player.html", "PlayerPage");
+
+        // Add a delay to ensure the playerWindow is fully loaded
+        const checkWindowLoaded = setInterval(() => {
+          if (
+            window.playerWindow &&
+            window.playerWindow.document.readyState === "complete"
+          ) {
+            clearInterval(checkWindowLoaded); // Stop checking once the page is loaded
+            sendPlayerInfoToPlayerPage(); // Send player info after the page is fully loaded
+          }
+        }, 100); // Check every 100ms
+      }
+
+      function sendPlayerInfoToPlayerPage() {
+        const players = JSON.parse(localStorage.getItem("players")) || [];
+        if (window.playerWindow) {
+          window.playerWindow.postMessage({ action: "players", players }, "*");
+        }
+      }
+
+      function sendImageToPlayerPage(imageName) {
+        if (window.playerWindow) {
+          window.playerWindow.postMessage({ action: "image", imageName }, "*");
+        }
+      }
+
+      function playSound(soundPath, loop = false) {
+        const soundPlayer = document.getElementById("sound-player");
+        const currentSound = document.getElementById("current-sound");
+
+        soundPlayer.src = soundPath;
+        soundPlayer.loop = loop;
+        soundPlayer.play();
+
+        // Display the current sound playing
+        const soundFileName = soundPath.split("/").pop(); // Extract the file name from the path
+        currentSound.textContent = `Now Playing: ${soundFileName}`;
+      }
+
+      // Attach click event to images in the scenario-content area
+      document.addEventListener("DOMContentLoaded", () => {
+        const scenarioContent = document.getElementById("scenario-content");
+        scenarioContent.addEventListener("click", (event) => {
+          if (event.target.tagName === "IMG") {
+            const imageName = event.target.src;
+            sendImageToPlayerPage(imageName);
+          }
+        });
+      });
+
+      // Load the selected scenario on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedScenario =
+          localStorage.getItem("selectedScenario") || "ypsilon";
+        document.getElementById("scenario-select").value = savedScenario;
+        loadScenario();
+      });
+
+      // Populate portrait list on page load
+      populatePortraitList();
+      renderPlayers();
+
+      // load the selected scenario
+      loadScenario();
+    </script>
+  </body>
+</html>
