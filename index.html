@@ -265,6 +265,16 @@
         margin-bottom: 10px;
         cursor: pointer;
       }
+
+      .attribution-link {
+        color: #33ff33; /* Green color */
+        font-weight: 400; /* 400 weight */
+        text-decoration: none; /* Remove underline */
+      }
+
+      .attribution-link:hover {
+        text-decoration: underline; /* Add underline on hover */
+      }
     </style>
   </head>
   <body>
@@ -666,7 +676,20 @@
 
           const areaHeader = document.createElement("h1");
           areaHeader.textContent = area.name;
-          areaHeader.onclick = () => toggleArea(areaDiv);
+
+          const arrowIcon = document.createElement("span");
+          arrowIcon.textContent = "▼"; // Down arrow initially
+          arrowIcon.style.marginLeft = "10px";
+          arrowIcon.style.cursor = "pointer";
+
+          areaHeader.appendChild(arrowIcon);
+
+          areaHeader.onclick = () => {
+            const isExpanded = areaDiv.dataset.expanded === "true";
+            toggleArea(areaDiv);
+            arrowIcon.textContent = isExpanded ? "▼" : "▲"; // Switch between down and up arrows
+            areaDiv.dataset.expanded = isExpanded ? "false" : "true";
+          };
 
           const sceneImagesDiv = document.createElement("div");
           sceneImagesDiv.className = "scene-images";
@@ -674,11 +697,9 @@
           area.scenes.forEach((scene) => {
             const sceneDiv = document.createElement("div");
 
-            // Format the description
             const descriptionDiv = document.createElement("div");
             descriptionDiv.className = "scene-description";
 
-            // Extract the first sentence
             const sentences = scene.description.match(/[^.!?]+[.!?]/g) || [
               scene.description,
             ];
@@ -688,13 +709,13 @@
             const formattedDescription = scene.description
               .split("\n")
               .map((line) => `<p>${line}</p>`)
-              .join(""); // Split by \n and wrap each line in a <p> tag
+              .join("");
 
             descriptionDiv.innerHTML = `<p>${firstSentence}${
               hasMoreSentences ? " <strong>(more)</strong>" : ""
-            }</p>`; // Show only the first sentence with "(more)" if applicable
-            descriptionDiv.dataset.fullDescription = formattedDescription; // Store the full description
-            descriptionDiv.dataset.collapsed = "true"; // Track collapsed state
+            }</p>`;
+            descriptionDiv.dataset.fullDescription = formattedDescription;
+            descriptionDiv.dataset.collapsed = "true";
 
             descriptionDiv.onclick = () => {
               const isCollapsed = descriptionDiv.dataset.collapsed === "true";
@@ -714,7 +735,6 @@
 
             sceneDiv.appendChild(descriptionDiv);
 
-            // Create a flex container for images
             const imageFlexContainer = document.createElement("div");
             imageFlexContainer.style.display = "flex";
             imageFlexContainer.style.flexWrap = "wrap";
@@ -730,7 +750,6 @@
               imageFlexContainer.appendChild(imageContainer);
             });
 
-            // Add sound links
             if (scene.sounds) {
               const soundLinksDiv = document.createElement("div");
               soundLinksDiv.style.marginTop = "10px";
@@ -753,7 +772,6 @@
               sceneDiv.appendChild(soundLinksDiv);
             }
 
-            // Add map links
             if (scene.maps) {
               const mapLinksDiv = document.createElement("div");
               mapLinksDiv.style.marginTop = "10px";
@@ -784,14 +802,16 @@
           scenarioContent.appendChild(areaDiv);
         });
 
-        // Render attributions
         const attributionDiv = document.createElement("div");
         attributionDiv.className = "attributions";
         attributionDiv.innerHTML = "<h1>Attributions</h1>";
 
         scenarioData.attributions.forEach((attribution) => {
           const attributionItem = document.createElement("p");
-          attributionItem.innerHTML = `<strong>${attribution.name}</strong> - ${attribution.role} (${attribution.contact})`;
+          attributionItem.innerHTML = `
+      <strong>${attribution.name}</strong> - ${attribution.role} 
+      (<a href="${attribution.contact}" class="attribution-link" target="_blank">${attribution.contact}</a>) 
+      - License: ${attribution.license}`;
           attributionDiv.appendChild(attributionItem);
         });
 

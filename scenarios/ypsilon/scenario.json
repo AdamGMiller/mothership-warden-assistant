@@ -6,7 +6,7 @@
       "scenes": [
         {
           "name": "Tempest Approach",
-          "description": "The hiss of decompression signals the end of hypersleep. One by one, cryopods split open in the dim light of the crew bay, releasing a wash of cold vapor that clings to bare skin and fogs the floor like spilled coolant. The crew of the Tempest shivers their way upright, dressed only in briefs and tank tops, blinking against the harsh fluorescents. Muscles ache with the slow return of gravity’s pull, and the air tastes faintly of old metal and thawing plastic. No alarm bells, no emergency klaxons. Just routine — another delivery on another rock.\nYou move like seasoned freight hands, groaning through stretches, checking vitals on flickering wall displays, and scrubbing sleep from your faces with calloused palms. Coffee’s already bubbling in the galley, sharp and overcooked, as they cycle through cargo manifests and verify clamps on the hold. Somewhere out in the dark, just visible on the forward screen, Ypsilon 14 hangs like a coal smudge—no features, no fanfare, just three shaky landing beacons blinking red against the void. A place to unload, sign the form, and leave.\nThe familiar pre-dock ritual kicks in: tools checked, belts cinched, loaders prepped. Someone swears about a jammed lifter, another cracks a joke about Mike still owing them a round. They’re tired, underdressed, and irritable—but operational. The cargo doesn’t care about cryo hangovers, and neither does the clock. Systems begin cycling for final approach, and the hum of the bay grows louder beneath their bare feet. Ypsilon 14 is waiting.",
+          "description": "The hiss of decompression signals the end of hypersleep. One by one, cryopods split open in the dim light of the crew bay, releasing a wash of cold vapor that clings to bare skin and fogs the floor like spilled coolant. The crew of the Tempest shivers their way upright, dressed only in briefs and tank tops, blinking against the harsh fluorescents. Muscles ache with the slow return of gravity's pull, and the air tastes faintly of old metal and thawing plastic. No alarm bells, no emergency klaxons. Just routine — another delivery on another rock.\nYou move like seasoned freight hands, groaning through stretches, checking vitals on flickering wall displays, and scrubbing sleep from your faces with calloused palms. Coffee's already bubbling in the galley, sharp and overcooked, as they cycle through cargo manifests and verify clamps on the hold. Somewhere out in the dark, just visible on the forward screen, Ypsilon 14 hangs like a coal smudge—no features, no fanfare, just three shaky landing beacons blinking red against the void. A place to unload, sign the form, and leave.\nThe familiar pre-dock ritual kicks in: tools checked, belts cinched, loaders prepped. You're tired, scruffy, and irritable — but operational. The cargo doesn't care about cryo hangovers, and neither does the clock. Systems begin cycling for final approach, and the hum of the bay grows louder beneath their bare feet. Ypsilon 14 is waiting.",
           "roomNumber": 101,
           "images": [
             "Tempest-Hypersleep.png",
@@ -32,7 +32,7 @@
       "scenes": [
         {
           "name": "Characters",
-          "description": "Non player characters.",
+          "description": "Mike - rugged and weathered, with streaks of dirt beneath sharp eyes and a permanent five o'clock shadow.\nSonya - hair pulled back in a tidy pony tail, her sharp gaze carrying quiet authority and practicality.\nAshraf - short stature with wide, trusting eyes and an open, naive smile that softens his youthful features.\nDana - stoic and sullen, her face set in a mask of concentration, movements precise and economical.\nJerome - tall and lean with a playful grin that sometimes slips to reveal restless, uneasy eyes.\nKantaro - muscular and quiet, with unkempt hair and the scent of sweat and oil, showing signs of neglect.\nMorgan - relaxed posture and friendly expression, but nervous glances betray underlying anxiety.\nRie - small with sharp features and an impish grin, eyes flickering with sarcasm and mischief.\nRosa - fit and imposing, dark eyes cold and assessing, carrying a domineering presence.\nPrince - a mottled yellow cat, ragged in appearance but prowling with cautious curiosity.",
           "roomNumber": 999,
           "images": [
             "Ashraf.png",
@@ -55,7 +55,7 @@
       "scenes": [
         {
           "name": "Docking Bay 2",
-          "description": "Docking Bay 2 of the mining base.",
+          "description": "The Tempest docks at Ypsilon Station with a heavy clang of locking clamps.\nAs you step into the dimly lit corridor, you're met by Sonya, a tired-looking station lead with a corporate badge and no time for pleasantries.\n\"Cargo checks out,\" she says, holding up a data pad. \"But we've got a problem — Mike's the one who needs to sign for it, and he's gone dark. No comms, no trace since last shift.” She glances nervously at the clamps securing your ship. \"Until we get his thumbprint, those clamps stay locked. Company policy.\"\nLooks like you're not leaving until you find Mike.",
           "roomNumber": 201,
           "images": ["Docking Bay 2.png"],
           "sounds": [
@@ -68,7 +68,7 @@
         },
         {
           "name": "Workspace",
-          "description": "Workspace area in the mining base.",
+          "description": "The room hums with the low thrum of a massive generator dominating the center, its console flickering with diagnostic readouts. Along one wall, work suits hang beside open cubbies stuffed with gear and personal items. A wide cargo lift rests at the mouth of a dark mining shaft, its rails dusty with use.  Nearby mining machinery processes ore sent through a yawning pit in the floor via heavy duty conduits.\nIn the corner, a compact medbay is tucked away—sterile, quiet, and clearly underused. Corridors branch off toward the crew quarters, while two reinforced airlocks provide access to the docked ships outside.",
           "roomNumber": 202,
           "images": [
             "Workspace.png",
@@ -79,7 +79,7 @@
         },
         {
           "name": "Quarters",
-          "description": "Living quarters in the mining base.",
+          "description": "A narrow corridor stretches ahead, lined with identical doors, each sporting a small removable nameplate. Names like Sonya, Ashraf, Dana, Jerome, Kantaro, Morgan, Rie, Rosa, and Mike are neatly printed on most, but one door stands out — its nameplate is blank. The walls are scuffed and faded, the hum of ventilation filling the quiet space, lending an air of tense anticipation to the otherwise mundane passage.",
           "roomNumber": 203,
           "images": [
             "cabin-ashraf.png",
@@ -94,7 +94,7 @@
         },
         {
           "name": "Mess",
-          "description": "Cafeteria and mess area.",
+          "description": "The mess hall is dimly lit, with humming automated kitchen units lining the back wall — some still blinking on standby. A stained table sits at the center, a music casette left forgotten at the edge. Beside it, someone's placed a cardboard cat bed, clearly handmade, the word \"Prince\" stenciled on the side. Through an open partition, the hydroponic gardens are visible; rows of drooping plants sag under flickering grow lights, their leaves beginning to wilt from neglect.",
           "roomNumber": 204,
           "images": ["Cafeteria.png", "HydroponicsGarden.png"],
           "sounds": [
@@ -107,13 +107,13 @@
         },
         {
           "name": "Washrooms",
-          "description": "Washrooms in the mining base.",
+          "description": "The washroom is utilitarian and worn, with rows of dented metal stalls and fogged-over mirrors bolted to stained walls. Grimy floor tiles lead to a line of showers, their drains slow and rust-ringed. One of the shower heads hangs broken, smashed and useless. Overhead, a large, clunky extractor fan rattles as it pulls steam into the vents, barely keeping up with the moisture clinging to every surface. The air smells of soap, rust, and something faintly sour.",
           "roomNumber": 205,
           "images": ["Mining Shower.png", "Mining Shower Broken.png"]
         },
         {
           "name": "Mine Entrance",
-          "description": "Entrance to the mine.",
+          "description": "The entrance to the mine is dominated by a heavy industrial airlock, its surface scuffed and streaked with dust from years of use. Warning lights pulse dimly above it, casting red glows on the reinforced floor. Beyond the sealed doors lies the shaft, where automated drills whir and grind deep within the rock. A series of thick conduits and rattling tubes snake upward from the airlock, pumping fragmented ore straight to the workspace above in a constant, clattering flow.",
           "roomNumber": 206,
           "images": ["MineEntrance.png"],
           "sounds": [
@@ -126,31 +126,31 @@
         },
         {
           "name": "Mine Tunnel",
-          "description": "Tunnel leading deeper into the mine.",
+          "description": "The mine tunnels stretch out before you, rough-hewn rock walls glinting with veins of ore that catch the flickering light of your helmet. Multiple narrow passages branch off unpredictably, some disappearing into shadowy alcoves, others descending steeply into deeper shafts. The main tunnel continues straight ahead, swallowed by darkness so thick it seems to pulse with unseen movement.",
           "roomNumber": 207,
           "images": ["MiningTunnel.png", "Mine Crossroads.png", "Mines.png"]
         },
         {
           "name": "Mine Depths",
-          "description": "The depths of the mine.",
+          "description": "Deep in the mine, the rough cave walls are stained with a splash of thick yellow goo, its origin unknown and unsettling. Nearby, an empty vaccsuit lies slumped in a lifeless heap, its visor cracked and dust-coated. The word 'silence' is scorched into the rock face with a handheld laser cutter left resting just below.",
           "roomNumber": 208,
           "images": ["Mine Depths.png"]
         },
         {
           "name": "Mine Antechamber",
-          "description": "Antechamber in the mine.",
+          "description": "The antechamber opens into a cavern sculpted from strangely smooth black rock, its walls curving into graceful arches and swirling patterns that catch the dim light. Thick yellow goo oozes sluggishly along the floor and drips from the ceiling, pooling near an empty fleshy pod affixed unnaturally to the rock face. Against one wall, a small workstation stands cluttered with an advanced scanner and a lone scrap of paper resting on the desk, its edges slightly stained.",
           "roomNumber": 209,
           "images": ["Mine Antechamber.png"]
         },
         {
           "name": "Docking Bay 1",
-          "description": "Docking Bay 1 of the mining base.",
+          "description": "The airlock to the Heracles is a massive steel door marked with scuffs and burn marks from frequent use, and a sturdy numbered keypad glows faintly beside the control panel. A small warning plaque nearby cautions that access is restricted, requiring a valid code to release the locking mechanism.",
           "roomNumber": 210,
           "images": ["Docking Bay 1.png"]
         },
         {
           "name": "Crawlspace",
-          "description": "Allows access around the mining base.",
+          "description": "You squeeze into a narrow crawlspace cramped with tangled cables and dusty ventilation ducts. The passage snakes through the mining area, branching off to vents leading into the crew quarters, mess hall, workspace, and washrooms. Flickering lights struggle to illuminate a grimy control panel mounted low on the wall, its screen cracked but still offering terminal access to the base's systems. The air here is stale, heavy with the scent of oil and damp metal.",
           "roomNumber": 211,
           "images": ["Crawlspace.png"],
           "sounds": [
@@ -169,38 +169,38 @@
       "scenes": [
         {
           "name": "Airlock",
-          "description": "The airlock of the Heracles.",
+          "description": "The airlock of the Heracles is sleek and modern, with smooth polished surfaces and clean lines. Soft blue lighting illuminates the pristine steel door, while an integrated biometric scanner pulses gently beside the entrance. The atmosphere feels sterile and high-tech, a stark contrast to the rugged mining base outside.",
           "roomNumber": 301,
           "images": ["Heracles-Airlock.png"],
           "maps": ["Heracles.png"]
         },
         {
           "name": "Bridge",
-          "description": "The bridge of the Heracles.",
+          "description": "The bridge of the Heracles is a compact, high-tech hub bathed in soft ambient light. Multiple sleek stations line the walls — dedicated to navigation, scientific analysis, and engineering diagnostics — each bristling with holographic displays and touch-sensitive controls. Yet, all systems converge seamlessly at the single pilot's chair positioned front and center, allowing one skilled operator to command the entire ship with precision and ease.",
           "roomNumber": 302,
           "images": ["Heracles-Bridge.png"]
         },
         {
           "name": "Engine Room",
-          "description": "The engine room of the Heracles.",
+          "description": "The engine room hums quietly, reactors at low power and engines on standby. Dim control panels flicker softly amid the tangle of pipes and cables, the air warm but calm.",
           "roomNumber": 303,
           "images": ["Heracles-Engine Room.png"]
         },
         {
           "name": "Galley",
-          "description": "The galley of the Heracles.",
+          "description": "The galley is compact and efficient, with space-saving seating neatly against the walls. Countless cupboards line the room, stocked with supplies and ration packs. Soft lighting and clean surfaces give it a tidy, functional feel amidst the ship's high-tech surroundings.",
           "roomNumber": 304,
           "images": ["Heracles-Galley.png"]
         },
         {
           "name": "Hypersleep",
-          "description": "Hypersleep chambers on the Heracles.",
+          "description": "The hypersleep chamber is a sterile, dimly lit room lined with sleek pods, their translucent canopies fogged by condensation but currently empty. Soft hums from the dormant life-support systems fill the air, and faint blue indicator lights pulse steadily on each pod's control panel.",
           "roomNumber": 305,
           "images": ["Heracles-Hypersleep.png"]
         },
         {
           "name": "Lab",
-          "description": "The lab on the Heracles.",
+          "description": "The main lab is a bright, orderly space filled with sleek workstations and advanced scientific equipment. At one bench, a scientist in a rumpled lab coat hunches intently over a microscope, surrounded by scattered samples and data pads. Their head is slightly bloated, topped by thinning black hair, unaware of your presence.",
           "roomNumber": 306,
           "images": [
             "Heracles-Lab.png",
@@ -218,7 +218,7 @@
         },
         {
           "name": "Stateroom",
-          "description": "The stateroom of the Heracles.",
+          "description": "The stateroom is compact but tidy, furnished with sturdy bunk beds stacked against one wall. Each bunk has its own small terminal embedded in the frame, glowing softly in the dim light. Personal effects are neatly stored in built-in compartments, giving the room a functional, lived-in feel.",
           "roomNumber": 307,
           "images": ["Heracles-Stateroom.png"]
         }
@@ -230,7 +230,7 @@
       "scenes": [
         {
           "name": "The Monster",
-          "description": "The invisible monster",
+          "description": "The miner staggers forward with a jerky, unnatural gait, as if caught in a distorted dream. Suddenly, their head blinks out of existence, followed by their torso, then limbs—each part vanishing in turn until the figure dissolves completely into the empty void, leaving nothing but an eerie stillness behind.",
           "roomNumber": 103,
           "images": [
             "Infrared.png",
@@ -248,7 +248,7 @@
         },
         {
           "name": "Escape Ypsilon 14",
-          "description": "Escape from the asteroid.",
+          "description": "The engines roar at full throttle, pushing beyond every limit as the ship hurtles away. Behind you, the asteroid erupts in a blinding fury of fire and shrapnel, casting the hull in violent flashes of light. Alarm bells scream and then abruptly cut out, leaving only the pounding of your own heartbeat echoing in the charged silence.",
           "roomNumber": 103,
           "images": [
             "AsteroidExplosion.png",
@@ -272,6 +272,12 @@
       "role": "Music and Sound Effects",
       "license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
       "contact": "https://tabletopaudio.com/"
+    },
+    {
+      "name": "Pearce Design Studio",
+      "role": "Starship Geomorphs Book",
+      "license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
+      "contact": "https://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html"
     }
   ]
 }
