@@ -78,7 +78,7 @@
       }
 
       .player-card {
-        width: calc(50% - 15px); /* Compact width */
+        width: calc(50% - 25px); /* Compact width */
         border: 1px solid #33ff33;
         padding: 5px; /* Reduce padding */
         background-color: #111;
@@ -90,8 +90,8 @@
       }
 
       .player-card img {
-        width: 100px; /* Smaller image */
-        height: 100px;
+        width: 80px; /* Smaller image */
+        height: 80px;
         object-fit: cover;
         border: 1px solid #33ff33;
         margin-bottom: 5px; /* Reduce margin */
@@ -417,7 +417,7 @@
           />
         </div>
 
-        <label>Wounds and Status:</label>
+        <label>Wounds:</label>
         <div style="display: flex; gap: 5px; align-items: center">
           <input
             id="player-current-wounds"
@@ -432,10 +432,21 @@
             maxlength="1"
             placeholder="Max"
           />
-          <input id="player-status" type="text" placeholder="Status" />
         </div>
 
-        <div style="display: flex; gap: 5px; align-items: center">
+        <label>Status:</label>
+        <div>
+          <input
+            id="player-status"
+            type="text"
+            placeholder="Status"
+            style="width: 100%"
+          />
+        </div>
+
+        <div
+          style="display: flex; gap: 5px; align-items: center; margin-top: 10px"
+        >
           <button onclick="removePlayer()" style="width: 80px">Remove</button>
           <button onclick="updatePlayer()">Update</button>
         </div>

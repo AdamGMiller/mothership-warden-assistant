@@ -63,10 +63,12 @@
         max-width: 95px;
         font-size: 10px;
         color: #33ff33;
-        text-align: right;
+        text-align: left;
         overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        white-space: normal; /* Allow wrapping to multiple lines */
+        line-height: 1.2; /* Adjust line spacing */
+        max-height: 20px; /* Limit height to fit two lines */
+        text-overflow: ellipsis; /* Add ellipsis for overflow */
       }
 
       .name-display {
