@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portraits</title>
+    <style>
+      body {
+        font-family: "Courier New", monospace;
+        background-color: #000;
+        color: #33ff33;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-transform: uppercase;
+        border-bottom: 2px solid #33ff33;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      .portrait-section {
+        margin-bottom: 40px;
+      }
+
+      .portrait-section h2 {
+        text-transform: uppercase;
+        border-bottom: 1px solid #33ff33;
+        padding-bottom: 5px;
+        margin-bottom: 20px;
+      }
+
+      .portrait-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .portrait-item {
+        text-align: center;
+        border: 1px solid #33ff33;
+        padding: 10px;
+        background-color: #111;
+      }
+
+      .portrait-item img {
+        width: 200px;
+        height: auto;
+        object-fit: cover;
+        border: 1px solid #33ff33;
+        margin-bottom: 10px;
+      }
+
+      .portrait-item p {
+        font-size: 14px;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Portraits</h1>
+
+    <div id="portrait-container">
+      <!-- Portrait sections will be dynamically added here -->
+    </div>
+
+    <script>
+      const prefixCounts = {
+        Android: 11,
+        Marine: 20,
+        Teamster: 21,
+        Scientist: 14,
+      };
+
+      const portraitContainer = document.getElementById("portrait-container");
+
+      Object.entries(prefixCounts).forEach(([prefix, count]) => {
+        const sectionDiv = document.createElement("div");
+        sectionDiv.className = "portrait-section";
+
+        const sectionHeader = document.createElement("h2");
+        sectionHeader.textContent = prefix;
+        sectionDiv.appendChild(sectionHeader);
+
+        const gridDiv = document.createElement("div");
+        gridDiv.className = "portrait-grid";
+
+        for (let i = 1; i <= count; i++) {
+          const portraitItem = document.createElement("div");
+          portraitItem.className = "portrait-item";
+
+          const img = document.createElement("img");
+          img.src = `./portraits/${prefix}${i}.png`;
+          img.alt = `${prefix}${i}`;
+
+          const fileName = document.createElement("p");
+          fileName.textContent = `${prefix}${i}.png`;
+
+          portraitItem.appendChild(img);
+          portraitItem.appendChild(fileName);
+          gridDiv.appendChild(portraitItem);
+        }
+
+        sectionDiv.appendChild(gridDiv);
+        portraitContainer.appendChild(sectionDiv);
+      });
+    </script>
+  </body>
+</html>

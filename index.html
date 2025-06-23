@@ -321,6 +321,27 @@
           color: #4b9a4b;
         }
       }
+
+      #quick-start-instructions {
+        display: none;
+        margin-top: 20px;
+        color: #33ff33;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      #quick-start-instructions strong {
+        font-weight: bold;
+      }
+
+      #quick-start-instructions ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      #quick-start-instructions li {
+        margin-bottom: 5px;
+      }
     </style>
   </head>
   <body>
@@ -335,6 +356,36 @@
       <button id="open-player-page" onclick="openPlayerPage()">
         Open Player Page
       </button>
+
+      <div
+        id="quick-start-instructions"
+        style="
+          display: none;
+          margin-top: 20px;
+          color: #33ff33;
+          font-size: 14px;
+          line-height: 1.5;
+        "
+      >
+        <strong>Quick Start:</strong>
+        <ul style="margin: 0; padding-left: 20px">
+          <li>
+            Click <strong>Open Player Page</strong> to open the player page -
+            move the browser tab to another monitor to show to players (hides
+            these instructions).
+          </li>
+          <li>
+            Click the scene titles below to expand, click on images to send to
+            the player screen.
+          </li>
+          <li>
+            Click on the player stats to edit them, click
+            <strong>Add Player</strong> for more,
+            <strong>Show Portraits</strong> to show all to the player. Changes
+            will be saved.
+          </li>
+        </ul>
+      </div>
 
       <div id="scenario-content" class="scenario-content">
         <!-- Scenario content will be dynamically added here -->
@@ -452,7 +503,23 @@
         </div>
       </div>
 
+      <!-- Existing Add Player button -->
       <button id="add-player-button" onclick="addPlayer()">Add Player</button>
+
+      <!-- New Show Portraits link -->
+      <a
+        id="show-portraits-link"
+        href="#"
+        onclick="sendShowPortraitsMessage()"
+        style="
+          color: #33ff33;
+          text-decoration: none;
+          margin-top: 10px;
+          display: block;
+        "
+      >
+        Show Portraits
+      </a>
     </div>
 
     <script>
@@ -478,8 +545,8 @@
         const portraitList = document.getElementById("portrait-list");
         const prefixCounts = {
           Android: 11,
-          Marine: 17,
-          Teamster: 12,
+          Marine: 20,
+          Teamster: 21,
           Scientist: 14,
         };
 
@@ -488,7 +555,7 @@
         Object.entries(prefixCounts).forEach(([prefix, count]) => {
           for (let i = 1; i <= count; i++) {
             const img = document.createElement("img");
-            img.src = `./portraits/${prefix}${i}.png`;
+            img.src = `./portraits/thumbnails/${prefix}${i}.png`;
             img.alt = `${prefix}${i}`;
             img.onclick = () => selectPortrait(`${prefix}${i}.png`);
             portraitList.appendChild(img);
@@ -528,7 +595,6 @@
         const portraitDisplay = document.getElementById(
           "player-portrait-display"
         );
-        //portraitDisplay.src = `./portraits/${portrait}`;
         document.getElementById("player-portrait").value = portrait;
 
         // Hide the portrait list after selecting a portrait
@@ -597,7 +663,7 @@
 
           // Create the player image element
           const playerImage = document.createElement("img");
-          playerImage.src = `./portraits/${player.portrait}`;
+          playerImage.src = `./portraits/thumbnails/${player.portrait}`;
           playerImage.alt = `${player.name}`;
           playerImage.onclick = () =>
             sendImageToPlayerPage(`./portraits/${player.portrait}`); // Send image to player.html
@@ -813,9 +879,11 @@
 
             scene.images.forEach((image) => {
               const imageContainer = document.createElement("div");
+              const thumbnailPath = `./scenarios/${getScenarioName()}/scenes/thumbnails/${image}`;
+              const imagePath = `./scenarios/${getScenarioName()}/scenes/${image}`;
               imageContainer.className = "scene-image-container";
               imageContainer.innerHTML = `
-          <img src="./scenarios/${getScenarioName()}/scenes/${image}" alt="${image}" onclick="sendImageToPlayerPage('${image}')">
+          <img src="${thumbnailPath}" alt="${image}" onclick="sendImageToPlayerPage('${imagePath}')">
           <p>${image}</p>
         `;
               imageFlexContainer.appendChild(imageContainer);
@@ -863,7 +931,7 @@
 
                 // Create the map image
                 const mapImageElement = document.createElement("img");
-                mapImageElement.src = `./scenarios/${getScenarioName()}/maps/${mapImage}`;
+                mapImageElement.src = `./scenarios/${getScenarioName()}/maps/thumbnails/${mapImage}`;
                 mapImageElement.alt = mapImage;
                 mapImageElement.style.width = "100px"; // Small thumbnail size
                 mapImageElement.style.height = "auto";
@@ -874,7 +942,9 @@
                 mapImageElement.onclick = () => {
                   event.stopPropagation();
                   window.open(
-                    `./map.html?map=${encodeURIComponent(mapImageElement.src)}`,
+                    `./map.html?map=${encodeURIComponent(
+                      `./scenarios/${getScenarioName()}/maps/${mapImage}`
+                    )}`,
                     "_blank"
                   );
                 };
@@ -953,6 +1023,12 @@
         }
       }
 
+      function sendShowPortraitsMessage() {
+        if (window.playerWindow) {
+          window.playerWindow.postMessage({ action: "showPortraits" }, "*");
+        }
+      }
+
       function playSound(soundPath, loop = false) {
         const soundPlayer = document.getElementById("sound-player");
         const currentSound = document.getElementById("current-sound");
@@ -965,17 +1041,6 @@
         const soundFileName = soundPath.split("/").pop(); // Extract the file name from the path
         currentSound.textContent = `Now Playing: ${soundFileName}`;
       }
-
-      // Attach click event to images in the scenario-content area
-      document.addEventListener("DOMContentLoaded", () => {
-        const scenarioContent = document.getElementById("scenario-content");
-        scenarioContent.addEventListener("click", (event) => {
-          if (event.target.tagName === "IMG") {
-            const imageName = event.target.src;
-            sendImageToPlayerPage(imageName);
-          }
-        });
-      });
 
       // Load the selected scenario on page load
       document.addEventListener("DOMContentLoaded", () => {
@@ -996,15 +1061,24 @@
       setInterval(() => {
         const openPlayerPageButton =
           document.getElementById("open-player-page");
+        const quickStartInstructions = document.getElementById(
+          "quick-start-instructions"
+        );
 
         if (!window.playerWindow || window.playerWindow.closed) {
           // Add animated arrows to the button
           openPlayerPageButton.innerHTML = `< < < Open Player Page < < <`;
           openPlayerPageButton.style.animation = "blink 1s infinite";
+
+          // Show the instructions
+          quickStartInstructions.style.display = "block";
         } else {
           // Restore the original button text
           openPlayerPageButton.innerHTML = "Open Player Page";
           openPlayerPageButton.style.animation = "none";
+
+          // Hide the instructions
+          quickStartInstructions.style.display = "none";
         }
       }, 1000);
     </script>

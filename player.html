@@ -112,6 +112,12 @@
               data.mapPath
             )}" style="width: 100%; height: 100%; border: none;"></iframe>
           `;
+        } else if (data.action === "showPortraits") {
+          console.log("Received showPortraits message");
+          const selectedImageDiv = document.getElementById("selected-image");
+          selectedImageDiv.innerHTML = `
+            <iframe src="portraits.html" style="width: 100%; height: 100%; border: none;"></iframe>
+          `;
         }
       });
     </script>

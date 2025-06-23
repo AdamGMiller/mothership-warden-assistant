@@ -4,6 +4,8 @@
 
 The Warden Assistant is designed to help run Mothership scenarios, providing images, music, and maps, as well as a way to track player status and present it to the players in a second monitor. This is primarily designed as an in-person experience, but screen sharing should allow use over the internet.
 
+Demo: [https://adamgmiller.github.io/mothership-warden-assistant/](https://adamgmiller.github.io/mothership-warden-assistant/)
+
 ## Setup
 
 You'll need to either copy the files to a web server, host the files locally (e.g. (IIS on Windows)[https://learn.microsoft.com/en-us/previous-versions/aspnet/ckk1e6z4(v=vs.100)]), or host the files on github.
