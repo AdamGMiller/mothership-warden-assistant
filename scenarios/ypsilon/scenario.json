@@ -1,4 +1,7 @@
 {
+  "name": "The Haunting of Ypsilon 14",
+  "url": "https://www.tuesdayknightgames.com/products/the-haunting-of-ypsilon-14",
+  "description": "A Mothership scenario set in a remote mining base, where the crew of the Tempest arrives to deliver cargo and collect a signature. As they dig deeper, they uncover a buried secret and an unseen threat stalking the dark, rust-choked corridors. What began as a routine drop-off becomes a fight to escape with their lives.",
   "areas": [
     {
       "order": 0,
@@ -6,7 +9,7 @@
       "scenes": [
         {
           "name": "Tempest Approach",
-          "description": "The hiss of decompression signals the end of hypersleep. One by one, cryopods split open in the dim light of the crew bay, releasing a wash of cold vapor that clings to bare skin and fogs the floor like spilled coolant. The crew of the Tempest shivers their way upright, dressed only in briefs and tank tops, blinking against the harsh fluorescents. Muscles ache with the slow return of gravity's pull, and the air tastes faintly of old metal and thawing plastic. No alarm bells, no emergency klaxons. Just routine — another delivery on another rock.\nYou move like seasoned freight hands, groaning through stretches, checking vitals on flickering wall displays, and scrubbing sleep from your faces with calloused palms. Coffee's already bubbling in the galley, sharp and overcooked, as they cycle through cargo manifests and verify clamps on the hold. Somewhere out in the dark, just visible on the forward screen, Ypsilon 14 hangs like a coal smudge—no features, no fanfare, just three shaky landing beacons blinking red against the void. A place to unload, sign the form, and leave.\nThe familiar pre-dock ritual kicks in: tools checked, belts cinched, loaders prepped. You're tired, scruffy, and irritable — but operational. The cargo doesn't care about cryo hangovers, and neither does the clock. Systems begin cycling for final approach, and the hum of the bay grows louder beneath their bare feet. Ypsilon 14 is waiting.",
+          "description": "The hiss of decompression signals the end of hypersleep. One by one, cryopods split open in the dim light of the crew bay, releasing a wash of cold vapor that clings to bare skin and fogs the floor like spilled coolant. The crew of the Tempest shivers their way upright, dressed only in briefs and tank tops, blinking against the harsh fluorescents. Muscles ache with the slow return of gravity's pull, and the air tastes faintly of old metal and thawing plastic. No alarm bells, no emergency klaxons. Just routine — another delivery on another rock.\nYou move like seasoned freight hands, groaning through stretches, checking vitals on flickering wall displays, and scrubbing sleep from your faces with calloused palms. Coffee's already bubbling in the galley, sharp and overcooked, as you cycle through cargo manifests and verify inventory. Somewhere out in the dark, just visible on the forward screen, Ypsilon 14 hangs like a coal smudge—no features, no fanfare, just three shaky landing beacons blinking red against the void. A place to unload, sign the form, and leave.\nThe familiar pre-dock ritual kicks in: tools checked, belts cinched, loaders prepped. You're tired, scruffy, and irritable — but operational. The cargo doesn't care about cryo hangovers, and neither does the clock. Systems begin cycling for final approach, and the hum of the bay grows louder beneath their bare feet. Ypsilon 14 is waiting.",
           "roomNumber": 101,
           "images": [
             "Tempest-Hypersleep.png",
@@ -31,21 +34,54 @@
       "name": "Characters",
       "scenes": [
         {
-          "name": "Characters",
-          "description": "Mike - rugged and weathered, with streaks of dirt beneath sharp eyes and a permanent five o'clock shadow.\nSonya - hair pulled back in a tidy pony tail, her sharp gaze carrying quiet authority and practicality.\nAshraf - short stature with wide, trusting eyes and an open, naive smile that softens his youthful features.\nDana - stoic and sullen, her face set in a mask of concentration, movements precise and economical.\nJerome - tall and lean with a playful grin that sometimes slips to reveal restless, uneasy eyes.\nKantaro - muscular and quiet, with unkempt hair and the scent of sweat and oil, showing signs of neglect.\nMorgan - relaxed posture and friendly expression, but nervous glances betray underlying anxiety.\nRie - small with sharp features and an impish grin, eyes flickering with sarcasm and mischief.\nRosa - fit and imposing, dark eyes cold and assessing, carrying a domineering presence.\nPrince - a mottled yellow cat, ragged in appearance but prowling with cautious curiosity.",
-          "roomNumber": 999,
-          "images": [
-            "Ashraf.png",
-            "Dana.png",
-            "Jerome.png",
-            "Kantaro.png",
-            "Mike.png",
-            "Morgan.png",
-            "Prince.png",
-            "Rie.png",
-            "Rosa.png",
-            "Sonya.png"
-          ]
+          "name": "Ashraf",
+          "description": "Short stature with wide, trusting eyes and an open, naive smile that softens his youthful features.\nAshraf and Rosa are in the mine entrance, trying to find the source of an air leak in the conduits that carry ore into the automated drills. \"I swear, it wasn't leaking before,\" he says, peering up at the conduits with a puzzled frown. \"Maybe it's just a bad seal?\"\nHe looks at Rosa, shaking his head. \"Do you think we should call Jerome? He knows more about this stuff than I do.\"",
+          "images": ["Ashraf.png"]
+        },
+        {
+          "name": "Dana",
+          "description": "Stoic and sullen, her face set in a mask of concentration, movements precise and economical.\nShe's off duty, arguing in the mess with Kantaro about his bathing habits. \"You smell like grease and asteroid dust, Kantaro,\" she says, crossing her arms. \"You need to clean up before you get into my bed again.\"",
+          "images": ["Dana.png"]
+        },
+        {
+          "name": "Jerome",
+          "description": "Tall and lean with a playful grin that sometimes slips to reveal restless, uneasy eyes.\nJerome is in the workspace, tinkering with a broken vaccsuit. \"I swear, this thing's possessed,\" he mutters, shaking his head as status lights flash red. \"Every time I fix it, it breaks again.\"\nHe looks up at you, his grin faltering. \"You think it's haunted?\"",
+          "images": ["Jerome.png"]
+        },
+        {
+          "name": "Rie",
+          "description": "Small with sharp features and an impish grin, eyes flickering with sarcasm and mischief.\nRie is off duty in his room, practicing guitar. The soft strumming echoes through the narrow corridors, blending with the hum of ventilation systems.",
+          "images": ["Rie.png"]
+        },
+        {
+          "name": "Kantaro",
+          "description": "Muscular and quiet, with unkempt hair and the scent of sweat and oil, showing signs of neglect.\nKantaro is in the mess arguing with Dana about his bathing habits before leaving for his room. \"You need to clean up before you get into my bed again,\" Dana says, crossing her arms. Kantaro grumbles and storms off, muttering under his breath.",
+          "images": ["Kantaro.png"]
+        },
+        {
+          "name": "Morgan",
+          "description": "Relaxed posture and friendly expression, but nervous glances betray underlying anxiety.\nMorgan is in the mess trying to get a candy bar unstuck from a vending machine. \"Come on, you stupid thing,\" she mutters, shaking the machine gently. The candy bar teeters on the edge but refuses to fall.",
+          "images": ["Morgan.png"]
+        },
+        {
+          "name": "Rosa",
+          "description": "Fit and imposing, dark eyes cold and assessing, carrying a domineering presence.\nRosa is with Ashraf in the Mine Entrance, trying to repair a conduit leak. \"This seal looks fine,\" she says, inspecting the conduit closely. \"Maybe the pressure's too high?\" She glances at Ashraf, her expression firm but calm.",
+          "images": ["Rosa.png"]
+        },
+        {
+          "name": "Mike",
+          "description": "Rugged and weathered, with streaks of dirt beneath sharp eyes and a permanent five o'clock shadow.\nMike is currently missing, last seen going into the mines. His absence has left the crew uneasy, and his signature is required to release the ship's clamps.",
+          "images": ["Mike.png"]
+        },
+        {
+          "name": "Sonya",
+          "description": "Hair pulled back in a tidy ponytail, her sharp gaze carrying quiet authority and practicality.\nSonya is in the Docking Bay, overseeing cargo operations and trying to locate Mike. \"We can't leave until we find him,\" she says, her voice steady but tense.",
+          "images": ["Sonya.png"]
+        },
+        {
+          "name": "Prince",
+          "description": "A mottled yellow cat, ragged in appearance but prowling with cautious curiosity.\nPrince is in the mess hall, curled up in a cardboard cat bed labeled \"Prince.\" Occasionally, he stretches and yawns, eyeing the crew with mild interest.",
+          "images": ["Prince.png"]
         }
       ]
     },
@@ -55,7 +91,7 @@
       "scenes": [
         {
           "name": "Docking Bay 2",
-          "description": "The Tempest docks at Ypsilon Station with a heavy clang of locking clamps.\nAs you step into the dimly lit corridor, you're met by Sonya, a tired-looking station lead with a corporate badge and no time for pleasantries.\n\"Cargo checks out,\" she says, holding up a data pad. \"But we've got a problem — Mike's the one who needs to sign for it, and he's gone dark. No comms, no trace since last shift.” She glances nervously at the clamps securing your ship. \"Until we get his thumbprint, those clamps stay locked. Company policy.\"\nLooks like you're not leaving until you find Mike.",
+          "description": "The Tempest docks at Ypsilon Station with a heavy clang of locking clamps.\nAs you step into the dimly lit corridor, you're met by Sonya, a tired-looking station lead with a corporate badge and no time for pleasantries.\n\"Cargo checks out,\" she says, holding up a data pad. \"But we've got a problem — Mike's the one who needs to sign for it, and he's gone dark. No comms, no trace since last shift.\" She glances nervously at the DOCKING HOLD alert on the airlock. \"Until we get his thumbprint, those clamps stay locked. Company policy.\"\nLooks like you're not leaving until you find Mike.",
           "roomNumber": 201,
           "images": ["Docking Bay 2.png"],
           "sounds": [
@@ -64,17 +100,20 @@
               "loop": true,
               "attribution": "Table Top Audio"
             }
-          ]
+          ],
+          "maps": ["Ypsilon.png"]
         },
         {
           "name": "Workspace",
-          "description": "The room hums with the low thrum of a massive generator dominating the center, its console flickering with diagnostic readouts. Along one wall, work suits hang beside open cubbies stuffed with gear and personal items. A wide cargo lift rests at the mouth of a dark mining shaft, its rails dusty with use.  Nearby mining machinery processes ore sent through a yawning pit in the floor via heavy duty conduits.\nIn the corner, a compact medbay is tucked away—sterile, quiet, and clearly underused. Corridors branch off toward the crew quarters, while two reinforced airlocks provide access to the docked ships outside.",
+          "description": "The primary workspace hums with the deep thrum of machinery. At its center yawns a massive pit, ringed with metal railings and heavy-duty conduits that snake downward into darkness, carrying ore from deep below. In one corner, a towering generator pulses with life, its control panel flickering with status lights. Across from it, a wide cargo lift squats beside the shaft, flanked by lockers, hanging work suits, and bins of personal gear. A compact, rarely used medbay occupies another corner—sterile and silent. Corridors stretch off toward crew quarters, while reinforced airlocks offer access to the docking bays beyond.",
           "roomNumber": 202,
           "images": [
             "Workspace.png",
             "Cargo Lift.png",
             "Console.png",
-            "Generator.png"
+            "Generator.png",
+            "Medbay.png",
+            "YawningPit.png"
           ]
         },
         {
@@ -94,7 +133,7 @@
         },
         {
           "name": "Mess",
-          "description": "The mess hall is dimly lit, with humming automated kitchen units lining the back wall — some still blinking on standby. A stained table sits at the center, a music casette left forgotten at the edge. Beside it, someone's placed a cardboard cat bed, clearly handmade, the word \"Prince\" stenciled on the side. Through an open partition, the hydroponic gardens are visible; rows of drooping plants sag under flickering grow lights, their leaves beginning to wilt from neglect.",
+          "description": "The mess hall is dimly lit, with humming automated kitchen units lining the back wall — prices marked for each packaged item. A stained table sits at the center, a music casette left forgotten at the edge. Beside it, someone's placed a cardboard cat bed, clearly handmade, the word \"Prince\" stenciled on the side. Through a glass door, the hydroponic gardens are visible; rows of drooping plants sag under flickering grow lights, their leaves beginning to wilt from neglect.",
           "roomNumber": 204,
           "images": ["Cafeteria.png", "HydroponicsGarden.png"],
           "sounds": [
@@ -113,7 +152,7 @@
         },
         {
           "name": "Mine Entrance",
-          "description": "The entrance to the mine is dominated by a heavy industrial airlock, its surface scuffed and streaked with dust from years of use. Warning lights pulse dimly above it, casting red glows on the reinforced floor. Beyond the sealed doors lies the shaft, where automated drills whir and grind deep within the rock. A series of thick conduits and rattling tubes snake upward from the airlock, pumping fragmented ore straight to the workspace above in a constant, clattering flow.",
+          "description": "The entrance to the mine is dominated by a heavy industrial airlock, its surface scuffed and streaked with dust from years of use. Warning lights pulse dimly above it, casting red glows on the reinforced floor. Beyond the sealed doors lies the shaft, where automated drills whir and grind deep within the rock. A series of thick conduits and rattling tubes snake upward, pumping fragmented ore straight to the workspace above in a constant, clattering flow.",
           "roomNumber": 206,
           "images": ["MineEntrance.png"],
           "sounds": [
@@ -247,7 +286,7 @@
           ]
         },
         {
-          "name": "Escape Ypsilon 14",
+          "name": "Escaping Ypsilon 14",
           "description": "The engines roar at full throttle, pushing beyond every limit as the ship hurtles away. Behind you, the asteroid erupts in a blinding fury of fire and shrapnel, casting the hull in violent flashes of light. Alarm bells scream and then abruptly cut out, leaving only the pounding of your own heartbeat echoing in the charged silence.",
           "roomNumber": 103,
           "images": [
