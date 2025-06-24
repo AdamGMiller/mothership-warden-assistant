@@ -25,7 +25,8 @@
               "attribution": "Table Top Audio"
             }
           ],
-          "maps": ["Tempest.png"]
+          "maps": ["Tempest.png"],
+          "systems": ["ypsilon"]
         }
       ]
     },

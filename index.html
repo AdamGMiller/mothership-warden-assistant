@@ -544,9 +544,9 @@
       function populatePortraitList() {
         const portraitList = document.getElementById("portrait-list");
         const prefixCounts = {
-          Android: 11,
+          Android: 17,
           Marine: 20,
-          Teamster: 21,
+          Teamster: 22,
           Scientist: 14,
         };
 
@@ -916,12 +916,23 @@
               mapLinksDiv.style.marginTop = "10px";
 
               scene.maps.forEach((mapImage) => {
-                // Create the map link
+                // Create the "open map locally" link
+                const openLocalLink = document.createElement("a");
+                openLocalLink.href = `map.html?map=./scenarios/${getScenarioName()}/maps/${mapImage}`;
+                openLocalLink.textContent = "(open map locally)";
+                openLocalLink.style.marginRight = "10px";
+                openLocalLink.style.color = "#33ff33";
+                openLocalLink.style.fontSize = "12px";
+                openLocalLink.style.textDecoration = "underline";
+                openLocalLink.target = "_blank";
+
+                // Create the Show Map link
                 const mapLink = document.createElement("a");
                 mapLink.href = "#";
                 mapLink.textContent = `Show Map: ${mapImage}`;
-                mapLink.style.display = "block";
+                mapLink.style.display = "inline-block";
                 mapLink.style.color = "#33ff33";
+                mapLink.style.marginRight = "10px";
                 mapLink.onclick = (event) => {
                   event.preventDefault();
                   sendMapToPlayerPage(
@@ -929,32 +940,65 @@
                   );
                 };
 
-                // Create the map image
-                const mapImageElement = document.createElement("img");
-                mapImageElement.src = `./scenarios/${getScenarioName()}/maps/thumbnails/${mapImage}`;
-                mapImageElement.alt = mapImage;
-                mapImageElement.style.width = "100px"; // Small thumbnail size
-                mapImageElement.style.height = "auto";
-                mapImageElement.style.cursor = "pointer";
-                mapImageElement.style.marginTop = "5px";
-                mapImageElement.style.border = "1px solid #33ff33";
-
-                mapImageElement.onclick = () => {
-                  event.stopPropagation();
-                  window.open(
-                    `./map.html?map=${encodeURIComponent(
-                      `./scenarios/${getScenarioName()}/maps/${mapImage}`
-                    )}`,
-                    "_blank"
-                  );
-                };
-
-                // Append the link and image to the map links div
+                // Append both links to the mapLinksDiv
                 mapLinksDiv.appendChild(mapLink);
-                mapLinksDiv.appendChild(mapImageElement);
+                mapLinksDiv.appendChild(openLocalLink);
               });
 
               sceneDiv.appendChild(mapLinksDiv);
+            }
+
+            if (scene.systems && Array.isArray(scene.systems)) {
+              scene.systems.forEach((systemName) => {
+                // Create container for system controls
+                const systemDiv = document.createElement("div");
+                systemDiv.style.margin = "10px 0";
+
+                // Label and input for body focus
+                const label = document.createElement("label");
+                label.textContent = `Show ${systemName} system to players (add number to zoom to that planet): `;
+                label.style.marginRight = "5px";
+                label.style.fontSize = "12px";
+                label.style.color = "#33ff33";
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = "0";
+                input.value = "0";
+                input.style.width = "50px";
+                input.style.marginRight = "10px";
+                input.style.background = "#000";
+                input.style.color = "#33ff33";
+                input.style.border = "1px solid #33ff33";
+                input.style.fontFamily = "Courier New, monospace";
+
+                // Show System button
+                const button = document.createElement("button");
+                button.textContent = `Show System`;
+                button.style.background = "#000";
+                button.style.color = "#33ff33";
+                button.style.border = "1px solid #33ff33";
+                button.style.fontFamily = "Courier New, monospace";
+                button.style.cursor = "pointer";
+                button.onclick = () => {
+                  if (window.playerWindow) {
+                    window.playerWindow.postMessage(
+                      {
+                        action: "showSystem",
+                        scenario: getScenarioName(),
+                        systemName: systemName,
+                        bodyFocus: parseInt(input.value, 10) || 0,
+                      },
+                      "*"
+                    );
+                  }
+                };
+
+                systemDiv.appendChild(label);
+                systemDiv.appendChild(input);
+                systemDiv.appendChild(button);
+                sceneDiv.appendChild(systemDiv);
+              });
             }
 
             sceneDiv.appendChild(imageFlexContainer);
@@ -963,6 +1007,7 @@
 
           areaDiv.appendChild(areaHeader);
           areaDiv.appendChild(sceneImagesDiv);
+
           scenarioContent.appendChild(areaDiv);
         });
 

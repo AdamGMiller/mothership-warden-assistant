@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CRT Solar System</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        background: #000;
+        color: #33ff33;
+        font-family: "Courier New", monospace;
+        overflow: hidden;
+      }
+      body {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      h1 {
+        color: #33ff33;
+        text-align: center;
+        margin-bottom: 0;
+        font-size: 2em;
+        letter-spacing: 2px;
+        text-shadow: 0 0 8px #33ff33;
+        z-index: 2;
+      }
+      #solarCanvas {
+        background: #000;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ypsilon System</h1>
+    <canvas id="solarCanvas"></canvas>
+    <script>
+      // --- System Rendering Logic (Generic) ---
+      const canvas = document.getElementById("solarCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let systemData = null;
+      let currentSystemName = null;
+      let focusBody = null;
+      let prevFocusBody = null;
+      let prevZoom = 1,
+        prevFocusX = null,
+        prevFocusY = null;
+      let targetZoom = 1,
+        targetFocusX = null,
+        targetFocusY = null;
+      const ANIMATION_DURATION = 2000; // ms
+
+      function resizeCanvas() {
+        const headerHeight = document.querySelector("h1").offsetHeight;
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight - headerHeight;
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      function getSystemScale() {
+        if (!systemData) return 1;
+        const maxOrbit = systemData.jumpPoint.orbit;
+        const margin = systemData.sun.radius + 40;
+        const usable = Math.min(canvas.width, canvas.height) / 2 - margin;
+        return usable / maxOrbit;
+      }
+
+      // Use fixed asteroid data from systemData
+      function getAsteroids() {
+        if (!systemData) return [];
+        return systemData.asteroidBelt.asteroids.map((a, i) => ({
+          ...a,
+          label: `${i + systemData.planets.length + 1}`,
+        }));
+      }
+
+      function setFocus(bodyFocus) {
+        if (bodyFocus > 0) {
+          focusBody = bodyFocus;
+        } else {
+          focusBody = null;
+        }
+      }
+
+      // Listen for postMessage
+      window.addEventListener("message", async (event) => {
+        console.log("Received message:", event.data);
+        const data = event.data;
+        if (!data) return;
+
+        // If systemName is not defined or doesn't match, load it
+        if (!data.systemName || data.systemName !== currentSystemName) {
+          let scenario = "default";
+          if (data.scenario) scenario = data.scenario;
+
+          const url = `./scenarios/${scenario}/systems/${data.systemName}.json`;
+          try {
+            console.log("Loading system from:", url);
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error("Failed to load system JSON");
+            systemData = await resp.json();
+            currentSystemName = data.systemName;
+            document.querySelector("h1").textContent =
+              systemData.name || data.systemName;
+
+            // If bodyFocus is present, set focus
+            if (typeof data.bodyFocus === "number") {
+              setFocus(data.bodyFocus);
+            }
+
+            // Immediately trigger a draw after loading
+            animationStart = null; // Reset animation for new system
+          } catch (e) {
+            document.querySelector("h1").textContent = "System not found";
+            systemData = null;
+            currentSystemName = null;
+            return;
+          }
+        } else {
+          // If bodyFocus is present, set focus
+          if (typeof data.bodyFocus === "number") {
+            setFocus(data.bodyFocus);
+          }
+        }
+      });
+
+      // For testing: input + button
+      window.zoomToBody = function () {
+        const val = parseInt(
+          document.getElementById("bodyFocusInput").value,
+          10
+        );
+        setFocus(val);
+      };
+
+      function drawCRTGlowCircle(x, y, r, color) {
+        ctx.save();
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 16;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawOrbit(x, y, r, options = {}) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.strokeStyle = "rgba(51,255,51,0.25)";
+        ctx.lineWidth = 1;
+        if (!options.solid) {
+          ctx.setLineDash([2, 6]);
+        }
+        ctx.shadowColor = "#33ff33";
+        ctx.shadowBlur = 4;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+
+      function drawPlanet(x, y, r, label) {
+        drawCRTGlowCircle(x, y, r, "#33ff33");
+        ctx.save();
+        ctx.font = "12px Courier New";
+        ctx.fillStyle = "#33ff33";
+        ctx.globalAlpha = 0.7;
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y - r - 8);
+        ctx.restore();
+      }
+
+      function drawSun(x, y, r, label) {
+        drawCRTGlowCircle(x, y, r, "#33ff33");
+        ctx.save();
+        ctx.font = "bold 16px Courier New";
+        ctx.fillStyle = "#33ff33";
+        ctx.globalAlpha = 1;
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + r + 20);
+        ctx.restore();
+      }
+
+      function drawJumpPoint(cx, cy, r) {
+        if (!systemData) return;
+        const angle = systemData.jumpPoint.angle;
+        const x = cx + r * Math.cos(angle);
+        const y = cy - r * Math.sin(angle);
+
+        // Draw X shape
+        ctx.save();
+        ctx.strokeStyle = "#33ff33";
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "#33ff33";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.moveTo(x - 18, y - 18);
+        ctx.lineTo(x + 18, y + 18);
+        ctx.moveTo(x + 18, y - 18);
+        ctx.lineTo(x - 18, y + 18);
+        ctx.stroke();
+        ctx.restore();
+
+        // Label
+        ctx.save();
+        ctx.font = "bold 16px Courier New";
+        ctx.fillStyle = "#33ff33";
+        ctx.globalAlpha = 1;
+        ctx.textAlign = "center";
+        ctx.fillText("Jump Point", x, y + 36);
+        ctx.restore();
+      }
+
+      function drawAsteroids(cx, cy, r, scale, now) {
+        const asteroids = getAsteroids();
+        asteroids.forEach((asteroid, i) => {
+          const angle = asteroid.angle + now * asteroid.speed + asteroid.phase;
+          const ax = cx + r * scale * Math.cos(angle);
+          const ay = cy + r * scale * Math.sin(angle);
+          drawCRTGlowCircle(ax, ay, asteroid.size * scale, "#33ff33");
+
+          ctx.save();
+          ctx.font = "10px Courier New";
+          ctx.fillStyle = "#33ff33";
+          ctx.globalAlpha = 0.6;
+          ctx.textAlign = "center";
+          ctx.fillText(asteroid.label, ax, ay - asteroid.size * scale - 6);
+          ctx.restore();
+        });
+      }
+
+      let animationStart = null;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (!systemData) {
+          // Draw loading or error message
+          ctx.save();
+          ctx.font = "bold 24px Courier New";
+          ctx.fillStyle = "#33ff33";
+          ctx.textAlign = "center";
+          ctx.fillText(
+            "Loading system...",
+            canvas.width / 2,
+            canvas.height / 2
+          );
+          ctx.restore();
+          requestAnimationFrame(draw);
+          return;
+        }
+
+        // Center of the system
+        let cx = canvas.width / 2;
+        let cy = canvas.height / 2;
+        let scale = getSystemScale();
+
+        // Animation time
+        const now = Date.now() / 1000;
+
+        // Handle zoom/focus
+        let zoom = 1;
+        let focusX = cx;
+        let focusY = cy;
+
+        // Calculate target zoom/focus
+        if (focusBody && focusBody > 0) {
+          const bodyFocus = focusBody;
+          if (bodyFocus >= 1 && bodyFocus <= systemData.planets.length) {
+            // Planet
+            const planet = systemData.planets[bodyFocus - 1];
+            const angle = now * planet.speed + planet.phase;
+            const px = cx + planet.orbit * scale * Math.cos(angle);
+            const py = cy + planet.orbit * scale * Math.sin(angle);
+            targetFocusX = px;
+            targetFocusY = py;
+            targetZoom = Math.max(
+              2.5,
+              Math.min(6, canvas.height / (planet.size * scale * 6))
+            );
+          } else if (
+            bodyFocus > systemData.planets.length &&
+            bodyFocus <= systemData.planets.length + getAsteroids().length
+          ) {
+            // Asteroid
+            const asteroidIndex = bodyFocus - systemData.planets.length - 1;
+            const asteroid = getAsteroids()[asteroidIndex];
+            const angle =
+              asteroid.angle + now * asteroid.speed + asteroid.phase;
+            const ax =
+              cx + systemData.asteroidBelt.orbit * scale * Math.cos(angle);
+            const ay =
+              cy + systemData.asteroidBelt.orbit * scale * Math.sin(angle);
+            targetFocusX = ax;
+            targetFocusY = ay;
+            targetZoom = Math.max(
+              3,
+              Math.min(8, canvas.height / (asteroid.size * scale * 8))
+            );
+          }
+        } else {
+          targetFocusX = cx;
+          targetFocusY = cy;
+          targetZoom = 1;
+        }
+
+        // Animation logic
+        if (animationStart === null || prevFocusBody !== focusBody) {
+          animationStart = performance.now();
+          prevFocusBody = focusBody;
+          prevZoom = typeof zoom === "number" ? zoom : 1;
+          prevFocusX = typeof focusX === "number" ? focusX : cx;
+          prevFocusY = typeof focusY === "number" ? focusY : cy;
+        }
+
+        let t = Math.min(
+          1,
+          (performance.now() - animationStart) / ANIMATION_DURATION
+        );
+        let easedT = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        // Interpolate zoom and focus
+        zoom = prevZoom + (targetZoom - prevZoom) * easedT;
+        focusX = prevFocusX + (targetFocusX - prevFocusX) * easedT;
+        focusY = prevFocusY + (targetFocusY - prevFocusY) * easedT;
+
+        // Save for next frame
+        if (t >= 1) {
+          prevZoom = targetZoom;
+          prevFocusX = targetFocusX;
+          prevFocusY = targetFocusY;
+        }
+
+        // Apply zoom transform
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(zoom, zoom);
+        ctx.translate(-focusX, -focusY);
+
+        // Draw the sun with label
+        drawSun(cx, cy, systemData.sun.radius * scale, systemData.sun.name);
+
+        // Draw orbits and planets
+        systemData.planets.forEach((planet) => {
+          drawOrbit(cx, cy, planet.orbit * scale);
+
+          const angle = now * planet.speed + planet.phase;
+          const px = cx + planet.orbit * scale * Math.cos(angle);
+          const py = cy + planet.orbit * scale * Math.sin(angle);
+
+          drawPlanet(px, py, planet.size * scale, planet.name);
+
+          if (planet.moons) {
+            planet.moons.forEach((moon) => {
+              drawOrbit(px, py, moon.orbit * scale);
+
+              const moonAngle = now * moon.speed + moon.phase;
+              const mx = px + moon.orbit * scale * Math.cos(moonAngle);
+              const my = py + moon.orbit * scale * Math.sin(moonAngle);
+
+              drawPlanet(mx, my, moon.size * scale, "");
+            });
+          }
+        });
+
+        // Draw asteroid belt (no dotted line for this orbit)
+        drawOrbit(cx, cy, systemData.asteroidBelt.orbit * scale, {
+          solid: true,
+        });
+        drawAsteroids(cx, cy, systemData.asteroidBelt.orbit, scale, now);
+
+        // Draw Jump Point at the edge (no orbital line)
+        drawJumpPoint(cx, cy, systemData.jumpPoint.orbit * scale);
+
+        ctx.restore();
+
+        requestAnimationFrame(draw);
+      }
+
+      // Set system name in header (default)
+      document.querySelector("h1").textContent = "Loading...";
+
+      draw();
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+      });
+    </script>
+  </body>
+</html>
