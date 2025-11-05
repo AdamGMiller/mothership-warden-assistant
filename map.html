@@ -274,16 +274,21 @@
         const rect = mapContainer.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        const prevScale = scale;
 
+        // Calculate the position in the image coordinate space before scaling
+        const imgX = (mouseX - originX) / scale;
+        const imgY = (mouseY - originY) / scale;
+
+        // Update the scale
         if (e.deltaY < 0) {
           scale *= scaleFactor;
         } else {
           scale /= scaleFactor;
         }
 
-        originX -= mouseX / prevScale - mouseX / scale;
-        originY -= mouseY / prevScale - mouseY / scale;
+        // Adjust origin so the point under the mouse stays in the same screen position
+        originX = mouseX - imgX * scale;
+        originY = mouseY - imgY * scale;
         updateTransform();
       });
 

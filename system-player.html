@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Viewer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #000;
+        color: #33ff33;
+        font-family: "Courier New", monospace;
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .controls {
+        background: #000;
+        border-bottom: 2px solid #33ff33;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+
+      .controls label {
+        color: #33ff33;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .controls select {
+        background: #000;
+        color: #33ff33;
+        border: 1px solid #33ff33;
+        font-family: "Courier New", monospace;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        min-width: 200px;
+      }
+
+      .controls select:focus {
+        outline: 2px solid #33ff33;
+        outline-offset: 2px;
+      }
+
+      .controls button {
+        background: #000;
+        color: #33ff33;
+        border: 1px solid #33ff33;
+        font-family: "Courier New", monospace;
+        cursor: pointer;
+        padding: 6px 16px;
+        font-size: 14px;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .controls button:hover {
+        background: #33ff33;
+        color: #000;
+      }
+
+      .controls button:active {
+        transform: scale(0.98);
+      }
+
+      #systemFrame {
+        width: 100%;
+        flex: 1;
+        border: none;
+        display: block;
+      }
+
+      .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #33ff33;
+        font-size: 18px;
+        text-align: center;
+        animation: blink 1s step-start infinite;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0.3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <label for="poiSelect">Point of Interest:</label>
+      <select id="poiSelect">
+        <option value="0">System Overview</option>
+      </select>
+      <button id="displayBtn">Display</button>
+    </div>
+    <iframe id="systemFrame" src="system.html"></iframe>
+
+    <script>
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const scenario = urlParams.get("scenario") || "ypsilon";
+      const systemName = urlParams.get("system") || "Ypsilon";
+
+      const poiSelect = document.getElementById("poiSelect");
+      const displayBtn = document.getElementById("displayBtn");
+      const systemFrame = document.getElementById("systemFrame");
+
+      let systemData = null;
+
+      // Helper function to calculate bodyFocus number from a pointOfInterest target
+      async function calculateBodyFocus(target) {
+        try {
+          if (!systemData) {
+            const systemResponse = await fetch(
+              `./scenarios/${scenario}/systems/${systemName}.json`
+            );
+            if (!systemResponse.ok) return 0;
+            systemData = await systemResponse.json();
+          }
+
+          if (target.type === "planet") {
+            // Find the planet index by name
+            const planetIndex = systemData.planets.findIndex(
+              (p) => p.name === target.name
+            );
+            if (planetIndex >= 0) {
+              return planetIndex + 1; // bodyFocus is 1-indexed
+            }
+          } else if (target.type === "asteroid") {
+            // Asteroid bodyFocus = planets.length + asteroidIndex + 1
+            return systemData.planets.length + target.index + 1;
+          } else if (target.type === "jumpPoint") {
+            // Jump points use special value -1
+            return -1;
+          }
+        } catch (error) {
+          console.error("Error calculating bodyFocus:", error);
+        }
+        return 0;
+      }
+
+      // Load system data and populate dropdown
+      async function loadSystemData() {
+        try {
+          const systemResponse = await fetch(
+            `./scenarios/${scenario}/systems/${systemName}.json`
+          );
+          if (!systemResponse.ok) {
+            console.error("Failed to load system data");
+            return;
+          }
+
+          systemData = await systemResponse.json();
+
+          // Clear existing options except the first one
+          while (poiSelect.options.length > 1) {
+            poiSelect.remove(1);
+          }
+
+          // Add pointsOfInterest to dropdown
+          if (
+            systemData.pointsOfInterest &&
+            Array.isArray(systemData.pointsOfInterest)
+          ) {
+            systemData.pointsOfInterest.forEach((poi) => {
+              const option = document.createElement("option");
+              option.value = JSON.stringify(poi.target);
+              option.textContent = poi.name;
+              poiSelect.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error("Error loading system data:", error);
+        }
+      }
+
+      // Send message to iframe to update system view
+      async function updateSystemView() {
+        const selectedValue = poiSelect.value;
+        let bodyFocus = 0;
+
+        if (selectedValue !== "0") {
+          try {
+            const target = JSON.parse(selectedValue);
+            bodyFocus = await calculateBodyFocus(target);
+          } catch (error) {
+            console.error("Error parsing target:", error);
+          }
+        }
+
+        // Send message to iframe
+        systemFrame.contentWindow.postMessage(
+          {
+            action: "showSystem",
+            scenario: scenario,
+            systemName: systemName,
+            bodyFocus: bodyFocus,
+          },
+          "*"
+        );
+      }
+
+      // Event listeners
+      displayBtn.addEventListener("click", updateSystemView);
+
+      // Also update on dropdown change
+      poiSelect.addEventListener("change", updateSystemView);
+
+      // Wait for iframe to load before sending initial message
+      systemFrame.addEventListener("load", () => {
+        // Send initial system load message
+        systemFrame.contentWindow.postMessage(
+          {
+            action: "showSystem",
+            scenario: scenario,
+            systemName: systemName,
+            bodyFocus: 0,
+          },
+          "*"
+        );
+      });
+
+      // Load system data on page load
+      loadSystemData();
+    </script>
+  </body>
+</html>

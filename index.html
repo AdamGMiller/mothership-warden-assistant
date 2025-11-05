@@ -69,6 +69,17 @@
         text-transform: uppercase;
       }
 
+      .form-container button.small-btn {
+        width: 13px;
+        height: 13px;
+        padding: 0;
+        margin: 0;
+        font-size: 8px;
+        font-weight: bold;
+        line-height: 1;
+        text-transform: none;
+      }
+
       .player-list {
         padding: 10px;
         display: flex;
@@ -78,13 +89,13 @@
       }
 
       .player-card {
-        width: calc(50% - 25px); /* Compact width */
+        width: 100%; /* Fill the full width of the column */
         border: 1px solid #33ff33;
         padding: 5px; /* Reduce padding */
         background-color: #111;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start; /* Left align content */
         font-size: 10px; /* Reduce font size */
         cursor: pointer; /* Display hand cursor */
       }
@@ -95,11 +106,13 @@
         object-fit: cover;
         border: 1px solid #33ff33;
         margin-bottom: 5px; /* Reduce margin */
+        align-self: center; /* Keep image centered */
       }
 
       .player-card h3 {
         font-size: 12px; /* Smaller font size */
         margin: 0;
+        align-self: center; /* Keep title centered */
       }
 
       .player-card p {
@@ -137,7 +150,7 @@
       .portrait-list {
         display: none;
         position: absolute;
-        width: 300px;
+        width: 80px; /* Narrow width to fit only one portrait plus padding */
         max-height: 50%;
         overflow-y: auto;
         background-color: #111;
@@ -152,7 +165,8 @@
         object-fit: cover;
         cursor: pointer;
         border: 1px solid #33ff33;
-        margin: 5px;
+        margin: 5px 0; /* Only vertical margin */
+        display: block; /* Make images block-level to stack vertically */
       }
 
       .portrait-list img:hover {
@@ -672,12 +686,138 @@
           const playerText = document.createElement("div");
           playerText.innerHTML = `
       <h3>${player.name}</h3>
-      <p>Health: ${player.currentHealth}/${player.maxHealth}</p>
-      <p>Wounds: ${player.currentWounds}/${player.maxWounds}</p>
-      <p>Stress: ${player.currentStress}/${player.maxStress}</p>
-      <p>Status: ${player.status}</p>
     `;
           playerText.onclick = () => loadPlayerIntoForm(index); // Open player edit form
+
+          // Create Health section with buttons
+          const healthDiv = document.createElement("div");
+          healthDiv.style.display = "flex";
+          healthDiv.style.alignItems = "center";
+          healthDiv.style.gap = "3px";
+          healthDiv.style.fontSize = "10px";
+          healthDiv.style.padding = "2px 0";
+
+          const healthLabel = document.createElement("span");
+          healthLabel.textContent = "Health: ";
+          healthLabel.style.width = "50px";
+          healthLabel.onclick = () => loadPlayerIntoForm(index);
+
+          const healthValue = document.createElement("span");
+          healthValue.textContent = `${player.currentHealth}/${player.maxHealth}`;
+          healthValue.style.width = "35px";
+          healthValue.onclick = () => loadPlayerIntoForm(index);
+
+          const healthMinusBtn = document.createElement("button");
+          healthMinusBtn.textContent = "-";
+          healthMinusBtn.className = "small-btn";
+          healthMinusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentHealth", -1);
+          };
+
+          const healthPlusBtn = document.createElement("button");
+          healthPlusBtn.textContent = "+";
+          healthPlusBtn.className = "small-btn";
+          healthPlusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentHealth", 1);
+          };
+
+          healthDiv.appendChild(healthLabel);
+          healthDiv.appendChild(healthValue);
+          healthDiv.appendChild(healthMinusBtn);
+          healthDiv.appendChild(healthPlusBtn);
+
+          // Create Stress section with buttons
+          const stressDiv = document.createElement("div");
+          stressDiv.style.display = "flex";
+          stressDiv.style.alignItems = "center";
+          stressDiv.style.gap = "3px";
+          stressDiv.style.fontSize = "10px";
+          stressDiv.style.padding = "2px 0";
+
+          const stressLabel = document.createElement("span");
+          stressLabel.textContent = "Stress: ";
+          stressLabel.style.width = "50px";
+          stressLabel.onclick = () => loadPlayerIntoForm(index);
+
+          const stressValue = document.createElement("span");
+          stressValue.textContent = `${player.currentStress}/${player.maxStress}`;
+          stressValue.style.width = "35px";
+          stressValue.onclick = () => loadPlayerIntoForm(index);
+
+          const stressMinusBtn = document.createElement("button");
+          stressMinusBtn.textContent = "-";
+          stressMinusBtn.className = "small-btn";
+          stressMinusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentStress", -1);
+          };
+
+          const stressPlusBtn = document.createElement("button");
+          stressPlusBtn.textContent = "+";
+          stressPlusBtn.className = "small-btn";
+          stressPlusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentStress", 1);
+          };
+
+          stressDiv.appendChild(stressLabel);
+          stressDiv.appendChild(stressValue);
+          stressDiv.appendChild(stressMinusBtn);
+          stressDiv.appendChild(stressPlusBtn);
+
+          // Create Wounds section with buttons
+          const woundsDiv = document.createElement("div");
+          woundsDiv.style.display = "flex";
+          woundsDiv.style.alignItems = "center";
+          woundsDiv.style.gap = "3px";
+          woundsDiv.style.fontSize = "10px";
+          woundsDiv.style.padding = "2px 0";
+
+          const woundsLabel = document.createElement("span");
+          woundsLabel.textContent = "Wounds: ";
+          woundsLabel.style.width = "50px";
+          woundsLabel.onclick = () => loadPlayerIntoForm(index);
+
+          const woundsValue = document.createElement("span");
+          woundsValue.textContent = `${player.currentWounds}/${player.maxWounds}`;
+          woundsValue.style.width = "35px";
+          woundsValue.onclick = () => loadPlayerIntoForm(index);
+
+          const woundsMinusBtn = document.createElement("button");
+          woundsMinusBtn.textContent = "-";
+          woundsMinusBtn.className = "small-btn";
+          woundsMinusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentWounds", -1);
+          };
+
+          const woundsPlusBtn = document.createElement("button");
+          woundsPlusBtn.textContent = "+";
+          woundsPlusBtn.className = "small-btn";
+          woundsPlusBtn.onclick = (e) => {
+            e.stopPropagation();
+            adjustPlayerStatByIndex(index, "currentWounds", 1);
+          };
+
+          woundsDiv.appendChild(woundsLabel);
+          woundsDiv.appendChild(woundsValue);
+          woundsDiv.appendChild(woundsMinusBtn);
+          woundsDiv.appendChild(woundsPlusBtn);
+
+          // Create Status section
+          const statusDiv = document.createElement("div");
+          statusDiv.style.fontSize = "10px";
+          statusDiv.style.padding = "2px 0";
+          statusDiv.innerHTML = `<p style="margin: 2px 0;">Status: ${player.status}</p>`;
+          statusDiv.onclick = () => loadPlayerIntoForm(index);
+
+          // Append all elements to the player text container
+          playerText.appendChild(healthDiv);
+          playerText.appendChild(stressDiv);
+          playerText.appendChild(woundsDiv);
+          playerText.appendChild(statusDiv);
 
           // Append the image and text to the player card
           playerCard.appendChild(playerImage);
@@ -739,6 +879,102 @@
         addPlayerButton.style.display = "block"; // Hide the Add Player button
       }
 
+      function adjustPlayerStat(statName, delta) {
+        const index = document.getElementById("player-select").value;
+        const player = players[index];
+        if (!player) return;
+
+        // Map the statName to the correct property
+        const statMap = {
+          currentHealth: "currentHealth",
+          currentStress: "currentStress",
+        };
+
+        const stat = statMap[statName];
+        if (!stat) return;
+
+        // Get the input element
+        const inputElement = document.getElementById(
+          `player-${statName.replace(/([A-Z])/g, "-$1").toLowerCase()}`
+        );
+
+        // Update the value
+        let newValue = player[stat] + delta;
+
+        // Clamp the value between 0 and max
+        const maxStatMap = {
+          currentHealth: "maxHealth",
+          currentStress: "maxStress",
+        };
+        const maxStat = maxStatMap[statName];
+        if (maxStat) {
+          newValue = Math.max(0, Math.min(newValue, player[maxStat]));
+        } else {
+          newValue = Math.max(0, newValue);
+        }
+
+        // Update player object
+        player[stat] = newValue;
+
+        // Update input field
+        inputElement.value = newValue;
+
+        // Save and sync
+        savePlayersToLocalStorage();
+        renderPlayers();
+        sendPlayerInfoToPlayerPage();
+      }
+
+      function adjustPlayerStatByIndex(index, statName, delta) {
+        const player = players[index];
+        if (!player) return;
+
+        // Map the statName to the correct property
+        const statMap = {
+          currentHealth: "currentHealth",
+          currentStress: "currentStress",
+          currentWounds: "currentWounds",
+        };
+
+        const stat = statMap[statName];
+        if (!stat) return;
+
+        // Update the value
+        let newValue = player[stat] + delta;
+
+        // Clamp the value between 0 and max
+        const maxStatMap = {
+          currentHealth: "maxHealth",
+          currentStress: "maxStress",
+          currentWounds: "maxWounds",
+        };
+        const maxStat = maxStatMap[statName];
+        if (maxStat) {
+          newValue = Math.max(0, Math.min(newValue, player[maxStat]));
+        } else {
+          newValue = Math.max(0, newValue);
+        }
+
+        // Update player object
+        player[stat] = newValue;
+
+        // Update input field if form is open for this player
+        const playerSelect = document.getElementById("player-select");
+        if (playerSelect.value == index) {
+          const inputElement = document.getElementById(
+            `player-${statName.replace(/([A-Z])/g, "-$1").toLowerCase()}`
+          );
+          if (inputElement) {
+            inputElement.value = newValue;
+          }
+        }
+
+        // Save and sync
+        savePlayersToLocalStorage();
+        renderPlayers();
+        sendPlayerInfoToPlayerPage();
+      }
+
       function addPlayer() {
         players.push({
           name: "New Player",
@@ -786,6 +1022,37 @@
         const scenarioSelect = document.getElementById("scenario-select");
         const savedScenario = localStorage.getItem("selectedScenario");
         return savedScenario || scenarioSelect.value;
+      }
+
+      // Helper function to calculate bodyFocus number from a pointOfInterest target
+      async function calculateBodyFocus(target, systemName) {
+        try {
+          const systemResponse = await fetch(
+            `./scenarios/${getScenarioName()}/systems/${systemName}.json`
+          );
+          if (!systemResponse.ok) return 0;
+
+          const systemData = await systemResponse.json();
+
+          if (target.type === "planet") {
+            // Find the planet index by name
+            const planetIndex = systemData.planets.findIndex(
+              (p) => p.name === target.name
+            );
+            if (planetIndex >= 0) {
+              return planetIndex + 1; // bodyFocus is 1-indexed
+            }
+          } else if (target.type === "asteroid") {
+            // Asteroid bodyFocus = planets.length + asteroidIndex + 1
+            return systemData.planets.length + target.index + 1;
+          } else if (target.type === "jumpPoint") {
+            // Jump points use special value -1
+            return -1;
+          }
+        } catch (error) {
+          console.error("Error calculating bodyFocus:", error);
+        }
+        return 0;
       }
 
       function renderScenario(scenarioData) {
@@ -949,45 +1216,93 @@
             }
 
             if (scene.systems && Array.isArray(scene.systems)) {
-              scene.systems.forEach((systemName) => {
+              scene.systems.forEach(async (systemName) => {
                 // Create container for system controls
                 const systemDiv = document.createElement("div");
                 systemDiv.style.margin = "10px 0";
 
-                // Label and input for body focus
+                // Label for dropdown
                 const label = document.createElement("label");
-                label.textContent = `Show ${systemName} system to players (add number to zoom to that planet): `;
+                label.textContent = `Show ${systemName} system to players: `;
                 label.style.marginRight = "5px";
                 label.style.fontSize = "12px";
                 label.style.color = "#33ff33";
 
-                const input = document.createElement("input");
-                input.type = "number";
-                input.min = "0";
-                input.value = "0";
-                input.style.width = "50px";
-                input.style.marginRight = "10px";
-                input.style.background = "#000";
-                input.style.color = "#33ff33";
-                input.style.border = "1px solid #33ff33";
-                input.style.fontFamily = "Courier New, monospace";
+                // Create dropdown
+                const dropdown = document.createElement("select");
+                dropdown.style.marginRight = "10px";
+                dropdown.style.background = "#000";
+                dropdown.style.color = "#33ff33";
+                dropdown.style.border = "1px solid #33ff33";
+                dropdown.style.fontFamily = "Courier New, monospace";
+                dropdown.style.padding = "4px 8px";
+                dropdown.style.cursor = "pointer";
 
-                // Show System button
-                const button = document.createElement("button");
-                button.textContent = `Show System`;
-                button.style.background = "#000";
-                button.style.color = "#33ff33";
-                button.style.border = "1px solid #33ff33";
-                button.style.fontFamily = "Courier New, monospace";
-                button.style.cursor = "pointer";
-                button.onclick = () => {
+                // Add default "System Overview" option
+                const defaultOption = document.createElement("option");
+                defaultOption.value = "0";
+                defaultOption.textContent = "System Overview";
+                dropdown.appendChild(defaultOption);
+
+                // Load system JSON to get pointsOfInterest
+                try {
+                  const systemResponse = await fetch(
+                    `./scenarios/${getScenarioName()}/systems/${systemName}.json`
+                  );
+                  if (systemResponse.ok) {
+                    const systemData = await systemResponse.json();
+
+                    // Add pointsOfInterest to dropdown
+                    if (
+                      systemData.pointsOfInterest &&
+                      Array.isArray(systemData.pointsOfInterest)
+                    ) {
+                      systemData.pointsOfInterest.forEach((poi) => {
+                        const option = document.createElement("option");
+                        option.value = JSON.stringify(poi.target);
+                        option.textContent = poi.name;
+                        dropdown.appendChild(option);
+                      });
+                    }
+                  }
+                } catch (error) {
+                  console.error(`Error loading system ${systemName}:`, error);
+                }
+
+                // Create Display button
+                const displayButton = document.createElement("button");
+                displayButton.textContent = "Display";
+                displayButton.style.background = "#000";
+                displayButton.style.color = "#33ff33";
+                displayButton.style.border = "1px solid #33ff33";
+                displayButton.style.fontFamily = "Courier New, monospace";
+                displayButton.style.cursor = "pointer";
+                displayButton.style.padding = "4px 12px";
+
+                // Handle button click
+                displayButton.onclick = async () => {
                   if (window.playerWindow) {
+                    const selectedValue = dropdown.value;
+                    let bodyFocus = 0;
+
+                    if (selectedValue !== "0") {
+                      try {
+                        const target = JSON.parse(selectedValue);
+                        bodyFocus = await calculateBodyFocus(
+                          target,
+                          systemName
+                        );
+                      } catch (error) {
+                        console.error("Error parsing target:", error);
+                      }
+                    }
+
                     window.playerWindow.postMessage(
                       {
                         action: "showSystem",
                         scenario: getScenarioName(),
                         systemName: systemName,
-                        bodyFocus: parseInt(input.value, 10) || 0,
+                        bodyFocus: bodyFocus,
                       },
                       "*"
                     );
@@ -995,8 +1310,8 @@
                 };
 
                 systemDiv.appendChild(label);
-                systemDiv.appendChild(input);
-                systemDiv.appendChild(button);
+                systemDiv.appendChild(dropdown);
+                systemDiv.appendChild(displayButton);
                 sceneDiv.appendChild(systemDiv);
               });
             }

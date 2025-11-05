@@ -81,5 +81,27 @@
   "jumpPoint": {
     "orbit": 950,
     "angle": 0.5235
-  }
+  },
+  "pointsOfInterest": [
+    {
+      "name": "Ypsilon Mining Station",
+      "target": {
+        "type": "asteroid",
+        "index": 8
+      }
+    },
+    {
+      "name": "Jump Point",
+      "target": {
+        "type": "jumpPoint"
+      }
+    },
+    {
+      "name": "LV-421",
+      "target": {
+        "type": "planet",
+        "name": "5"
+      }
+    }
+  ]
 }

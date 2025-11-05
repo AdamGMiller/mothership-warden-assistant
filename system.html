@@ -60,6 +60,9 @@
       let targetZoom = 1,
         targetFocusX = null,
         targetFocusY = null;
+      let currentZoom = 1,
+        currentFocusX = null,
+        currentFocusY = null; // Track current animated values
       const ANIMATION_DURATION = 2000; // ms
 
       function resizeCanvas() {
@@ -89,7 +92,7 @@
       }
 
       function setFocus(bodyFocus) {
-        if (bodyFocus > 0) {
+        if (bodyFocus !== 0) {
           focusBody = bodyFocus;
         } else {
           focusBody = null;
@@ -273,13 +276,8 @@
         // Animation time
         const now = Date.now() / 1000;
 
-        // Handle zoom/focus
-        let zoom = 1;
-        let focusX = cx;
-        let focusY = cy;
-
         // Calculate target zoom/focus
-        if (focusBody && focusBody > 0) {
+        if (focusBody && focusBody !== 0) {
           const bodyFocus = focusBody;
           if (bodyFocus >= 1 && bodyFocus <= systemData.planets.length) {
             // Planet
@@ -312,6 +310,16 @@
               3,
               Math.min(8, canvas.height / (asteroid.size * scale * 8))
             );
+          } else if (bodyFocus === -1) {
+            // Jump Point (special value -1)
+            const angle = systemData.jumpPoint.angle;
+            const jx =
+              cx + systemData.jumpPoint.orbit * scale * Math.cos(angle);
+            const jy =
+              cy - systemData.jumpPoint.orbit * scale * Math.sin(angle);
+            targetFocusX = jx;
+            targetFocusY = jy;
+            targetZoom = Math.max(2, Math.min(4, canvas.height / (40 * scale)));
           }
         } else {
           targetFocusX = cx;
@@ -323,32 +331,37 @@
         if (animationStart === null || prevFocusBody !== focusBody) {
           animationStart = performance.now();
           prevFocusBody = focusBody;
-          prevZoom = typeof zoom === "number" ? zoom : 1;
-          prevFocusX = typeof focusX === "number" ? focusX : cx;
-          prevFocusY = typeof focusY === "number" ? focusY : cy;
+          // Use current animated values as starting point, not the reset values
+          prevZoom = currentZoom !== null ? currentZoom : 1;
+          prevFocusX = currentFocusX !== null ? currentFocusX : cx;
+          prevFocusY = currentFocusY !== null ? currentFocusY : cy;
         }
 
         let t = Math.min(
           1,
           (performance.now() - animationStart) / ANIMATION_DURATION
         );
-        let easedT = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-        // Interpolate zoom and focus
-        zoom = prevZoom + (targetZoom - prevZoom) * easedT;
-        focusX = prevFocusX + (targetFocusX - prevFocusX) * easedT;
-        focusY = prevFocusY + (targetFocusY - prevFocusY) * easedT;
+        // Smooth ease-in-out interpolation
+        let easedT = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-        // Save for next frame
-        if (t >= 1) {
-          prevZoom = targetZoom;
-          prevFocusX = targetFocusX;
-          prevFocusY = targetFocusY;
-        }
+        // Interpolate zoom and focus position smoothly
+        let zoom = prevZoom + (targetZoom - prevZoom) * easedT;
+        let focusX = prevFocusX + (targetFocusX - prevFocusX) * easedT;
+        let focusY = prevFocusY + (targetFocusY - prevFocusY) * easedT;
+
+        // Save current animated values for next animation start
+        currentZoom = zoom;
+        currentFocusX = focusX;
+        currentFocusY = focusY;
 
         // Apply zoom transform
         ctx.save();
         ctx.translate(cx, cy);
+        // Apply manual zoom and offset first (for user interaction)
+        ctx.translate(manualOffsetX, manualOffsetY);
+        ctx.scale(manualZoom, manualZoom);
+        // Then apply animated zoom (for point-of-interest focus)
         ctx.scale(zoom, zoom);
         ctx.translate(-focusX, -focusY);
 
@@ -394,6 +407,141 @@
 
       // Set system name in header (default)
       document.querySelector("h1").textContent = "Loading...";
+
+      // Mouse and touch interaction variables
+      let isDragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let lastTouchDistance = null;
+      let manualZoom = 1;
+      let manualOffsetX = 0;
+      let manualOffsetY = 0;
+
+      // Mouse wheel zoom
+      canvas.addEventListener("wheel", (e) => {
+        e.preventDefault();
+
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        // Get current center positions
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        // Calculate point in world space before zoom
+        const worldX = (mouseX - cx - manualOffsetX) / manualZoom;
+        const worldY = (mouseY - cy - manualOffsetY) / manualZoom;
+
+        // Update zoom
+        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+        manualZoom *= zoomFactor;
+
+        // Clamp zoom
+        manualZoom = Math.max(0.1, Math.min(10, manualZoom));
+
+        // Adjust offset so point under mouse stays in same screen position
+        manualOffsetX = mouseX - cx - worldX * manualZoom;
+        manualOffsetY = mouseY - cy - worldY * manualZoom;
+      });
+
+      // Mouse drag for panning
+      canvas.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        dragStartX = e.clientX - manualOffsetX;
+        dragStartY = e.clientY - manualOffsetY;
+        canvas.style.cursor = "grabbing";
+      });
+
+      canvas.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          manualOffsetX = e.clientX - dragStartX;
+          manualOffsetY = e.clientY - dragStartY;
+        }
+      });
+
+      canvas.addEventListener("mouseup", () => {
+        isDragging = false;
+        canvas.style.cursor = "grab";
+      });
+
+      canvas.addEventListener("mouseleave", () => {
+        isDragging = false;
+        canvas.style.cursor = "grab";
+      });
+
+      // Set initial cursor
+      canvas.style.cursor = "grab";
+
+      // Touch support
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+
+        if (e.touches.length === 1) {
+          // Single touch - pan
+          isDragging = true;
+          dragStartX = e.touches[0].clientX - manualOffsetX;
+          dragStartY = e.touches[0].clientY - manualOffsetY;
+        } else if (e.touches.length === 2) {
+          // Two touches - prepare for pinch zoom
+          isDragging = false;
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          lastTouchDistance = Math.hypot(dx, dy);
+        }
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+
+        if (e.touches.length === 1 && isDragging) {
+          // Single touch pan
+          manualOffsetX = e.touches[0].clientX - dragStartX;
+          manualOffsetY = e.touches[0].clientY - dragStartY;
+        } else if (e.touches.length === 2) {
+          // Pinch zoom
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const newDistance = Math.hypot(dx, dy);
+
+          if (lastTouchDistance) {
+            const rect = canvas.getBoundingClientRect();
+            const midX =
+              (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+            const midY =
+              (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // Calculate point in world space before zoom
+            const worldX = (midX - cx - manualOffsetX) / manualZoom;
+            const worldY = (midY - cy - manualOffsetY) / manualZoom;
+
+            // Update zoom based on pinch
+            const zoomFactor = newDistance / lastTouchDistance;
+            manualZoom *= zoomFactor;
+
+            // Clamp zoom
+            manualZoom = Math.max(0.1, Math.min(10, manualZoom));
+
+            // Adjust offset so point under pinch stays in same screen position
+            manualOffsetX = midX - cx - worldX * manualZoom;
+            manualOffsetY = midY - cy - worldY * manualZoom;
+          }
+
+          lastTouchDistance = newDistance;
+        }
+      });
+
+      canvas.addEventListener("touchend", (e) => {
+        if (e.touches.length < 2) {
+          lastTouchDistance = null;
+        }
+        if (e.touches.length === 0) {
+          isDragging = false;
+        }
+      });
 
       draw();
       window.addEventListener("resize", () => {
